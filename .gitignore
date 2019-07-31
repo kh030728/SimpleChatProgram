@@ -6,3 +6,5 @@ Client/SimpleChatClient/SimpleChatClient.sln
 Client/SimpleChatClient/SimpleChatClient/SimpleChatClient.vcxproj
 Client/SimpleChatClient/SimpleChatClient/SimpleChatClient.vcxproj.filters
 Client/SimpleChatClient/SimpleChatClient/SimpleChatClient.vcxproj.user
+Client/SimpleChatClient/.vs/SimpleChatClient/v15/.suo
+Client/SimpleChatClient/.vs/SimpleChatClient/v15/ipch/AutoPCH/a97b235b4ee9b0e6/TCP.ipch
