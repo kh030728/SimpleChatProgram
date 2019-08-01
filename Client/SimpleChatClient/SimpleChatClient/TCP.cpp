@@ -14,7 +14,7 @@ std::vector<RoomInfo> TCP::requestRoomList()
 	char cBuffer[PACKET_SIZE] = {};
 	std::string info = "";
 	int flag = 1;
-	while (!(flag != 0 ^ flag != -1))
+	while (!((flag != 0) ^ (flag != -1)))
 	{
 		flag = recv(toRoomInfo, cBuffer, PACKET_SIZE, 0);
 		info = cBuffer;
@@ -46,5 +46,11 @@ TCP::~TCP()
 
 bool TCP::send(Purpose purpose, std::string input)
 {
-	return false;
+	switch (purpose)
+	{
+	case Purpose::REQUEST_ROOMLIST:
+		std::cout << "Request room list" << std::endl;
+	default:
+		return false;
+	}
 }

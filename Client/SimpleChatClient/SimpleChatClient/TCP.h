@@ -4,7 +4,7 @@
 #include "RoomInfo.h"
 #include <vector>
 
-constexpr auto ROOM_PORT = 1;
+#define ROOM_PORT 6000
 
 #define PACKET_SIZE 1024
 
@@ -14,7 +14,7 @@ private:
 	WSAData wsaData;
 	std::vector<RoomInfo> requestRoomList();
 	SOCKET toRoomInfo;
-	unsigned short _SERVER_IP;
+	unsigned long _SERVER_IP;
 	bool requestRoomAccess();
 	bool requestSendChat();
 	
