@@ -8,17 +8,17 @@ std::vector<RoomInfo> TCP::requestRoomList()
 	roomInfoAddr.sin_family = AF_INET;
 	roomInfoAddr.sin_port = ROOM_PORT;
 	roomInfoAddr.sin_addr.S_un.S_addr = _SERVER_IP;
-
+	std::cout << "주소 설정 끝" << std::endl;
 	connect(toRoomInfo, (SOCKADDR*)&roomInfoAddr, sizeof(roomInfoAddr));
-
-	char cBuffer[PACKET_SIZE] = {};
+	std::cout << "연결완료" << std::endl;
+	char cBuffer[PACKET_SIZE] = "REQUEST_ROOMINFO";
+	send(toRoomInfo, cBuffer, PACKET_SIZE, 0);
+	std::cout << "전송한 메시지 : " << cBuffer << std::endl;
 	std::string info = "";
-	int flag = 1;
-	while (!((flag != 0) ^ (flag != -1)))
-	{
-		flag = recv(toRoomInfo, cBuffer, PACKET_SIZE, 0);
-		info = cBuffer;
-	}
+	recv(toRoomInfo, cBuffer, PACKET_SIZE, 0);
+	info = cBuffer;
+	std::cout << "받은 메시지 : " << info.c_str() << std::endl;
+
 	return output;
 }
 
@@ -42,15 +42,4 @@ TCP::TCP(std::string IPAddr)
 TCP::~TCP()
 {
 	WSACleanup();
-}
-
-bool TCP::send(Purpose purpose, std::string input)
-{
-	switch (purpose)
-	{
-	case Purpose::REQUEST_ROOMLIST:
-		std::cout << "Request room list" << std::endl;
-	default:
-		return false;
-	}
 }

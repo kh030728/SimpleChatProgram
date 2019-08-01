@@ -7,28 +7,26 @@
 #define ROOM_PORT 6000
 
 #define PACKET_SIZE 1024
-
+#pragma comment(lib, "ws2_32")
 class TCP
 {
 private:
 	WSAData wsaData;
-	std::vector<RoomInfo> requestRoomList();
 	SOCKET toRoomInfo;
 	unsigned long _SERVER_IP;
 	bool requestRoomAccess();
 	bool requestSendChat();
-	
-	
-public :
+
+
+public:
 	enum class Purpose {
 		REQUEST_ROOMLIST,
 		REQUEST_ROOMACCSESS,
 		REQUEST_SENDCHAT
 	};
+	std::vector<RoomInfo> requestRoomList();
 
 	TCP(std::string IPAddr);
 	~TCP();
-	bool send(Purpose purpose, std::string input);
-	
-};
 
+};
