@@ -9,7 +9,6 @@
         Background="Aqua"
         ResizeMode="NoResize">
 
-    <Border Padding="10">
         <Grid>
             <!--최상위 그리드-->
             <Grid.RowDefinitions>
@@ -79,7 +78,6 @@
 
 
         </Grid>
-    </Border>
 
 
 </Window>
