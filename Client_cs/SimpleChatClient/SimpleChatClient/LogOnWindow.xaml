@@ -8,37 +8,78 @@
         Title="MainWindow" Height="220" Width="450"
         Background="Aqua"
         ResizeMode="NoResize">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="27*"/>
-            <ColumnDefinition Width="7*"/>
-        </Grid.ColumnDefinitions>
-        <TextBlock 
-            HorizontalAlignment="Left" 
-            Margin="50,40,0,0" 
-            TextWrapping="Wrap" 
-            VerticalAlignment="Top" 
-            Height="19" 
-            Width="83">
-            <Run Text="접속할 IP 주소"/><LineBreak/><Run/><LineBreak/>
-        </TextBlock>
-        <TextBox 
-            Name = "tb_IPAddr" 
-            HorizontalAlignment="Left"
-            Height="23" 
-            TextWrapping="Wrap" 
-            VerticalAlignment="Top"
-            Width="176" 
-            Margin="140,35,0,0" 
-            FocusManager.GotFocus="Tb_IPAddr_GotFocus"/>
-        <TextBlock 
-            HorizontalAlignment="Left" Margin="50,100,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="19" Width="83" Text="사용할 닉네임"/>
-        <TextBox 
-            Name = "tb_NickName"  HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="176" Margin="140,95,0,0" FocusManager.GotFocus="Tb_IPAddr_GotFocus"/>
-        <Button 
-            Content="접속" HorizontalAlignment="Left" VerticalAlignment="Top" Width="72" Margin="330,35,0,0" Height="80" Click="Button_Click" Grid.ColumnSpan="2"/>
-        <TextBlock 
-            Name ="LOW_tB_statusMsg" TextAlignment="Center" HorizontalAlignment="Center" Height="19" Margin="-4,145,-4,0" VerticalAlignment="Top" Width="450" Background="RoyalBlue" Grid.ColumnSpan="2"/>
 
-    </Grid>
+    <Border Padding="10">
+        <Grid>
+            <!--최상위 그리드-->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="4*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <!-- 주소부, 별칭부, 버튼까지 포함하는 그리드-->
+            <Grid
+                Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <!-- 입력부와 버튼 구분하는 그리드-->
+                <Grid
+                    Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <!-- 입력부 - 주소부-->
+                    <Grid
+                        Grid.Row="0"
+                        VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock 
+                            Text="접속할 IP 주소"
+                            TextAlignment="Center"
+                            Grid.Column="0"/>
+                        <TextBox Name="tb_IPAddr"
+                            Grid.Column="1"
+                            FocusManager.GotFocus="Tb_IPAddr_GotFocus"/>
+                    </Grid>
+                    <!-- 입력부 - 별칭부-->
+                    <Grid
+                        Grid.Row="1"
+                        VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock 
+                            Text="닉 네 임"
+                            TextAlignment="Center"
+                            Grid.Column="0"/>
+                        <TextBox Name="tb_NickName"
+                            Grid.Column="1"
+                            FocusManager.GotFocus="Tb_IPAddr_GotFocus"/>
+                    </Grid>
+                </Grid>
+                <Button
+                    Margin="10 10 10 10"
+                    Grid.Column="1"
+                    Content="접속"
+                    Click="Button_Click"/>
+            </Grid>
+            <TextBlock Name="LOW_tB_statusMsg"
+                Grid.Row="1"
+                       Margin="0 7 0 7"
+                Background="Red"
+                       Visibility="Hidden"
+                       TextAlignment="Center"
+                />
+
+
+        </Grid>
+    </Border>
+
+
 </Window>
