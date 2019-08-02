@@ -1,0 +1,44 @@
+﻿<Window x:Class="SimpleChatClient.LogOnWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SimpleChatClient"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="220" Width="450"
+        Background="Aqua"
+        ResizeMode="NoResize">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="27*"/>
+            <ColumnDefinition Width="7*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock 
+            HorizontalAlignment="Left" 
+            Margin="50,40,0,0" 
+            TextWrapping="Wrap" 
+            VerticalAlignment="Top" 
+            Height="19" 
+            Width="83">
+            <Run Text="접속할 IP 주소"/><LineBreak/><Run/><LineBreak/>
+        </TextBlock>
+        <TextBox 
+            Name = "tb_IPAddr" 
+            HorizontalAlignment="Left"
+            Height="23" 
+            TextWrapping="Wrap" 
+            VerticalAlignment="Top"
+            Width="176" 
+            Margin="140,35,0,0" 
+            FocusManager.GotFocus="Tb_IPAddr_GotFocus"/>
+        <TextBlock 
+            HorizontalAlignment="Left" Margin="50,100,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="19" Width="83" Text="사용할 닉네임"/>
+        <TextBox 
+            Name = "tb_NickName"  HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="176" Margin="140,95,0,0" FocusManager.GotFocus="Tb_IPAddr_GotFocus"/>
+        <Button 
+            Content="접속" HorizontalAlignment="Left" VerticalAlignment="Top" Width="72" Margin="330,35,0,0" Height="80" Click="Button_Click" Grid.ColumnSpan="2"/>
+        <TextBlock 
+            Name ="LOW_tB_statusMsg" TextAlignment="Center" HorizontalAlignment="Center" Height="19" Margin="-4,145,-4,0" VerticalAlignment="Top" Width="450" Background="RoyalBlue" Grid.ColumnSpan="2"/>
+
+    </Grid>
+</Window>

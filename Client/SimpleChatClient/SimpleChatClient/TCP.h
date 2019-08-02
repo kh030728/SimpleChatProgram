@@ -12,20 +12,15 @@ class TCP
 {
 private:
 	WSAData wsaData;
-	SOCKET toRoomInfo;
+	SOCKET toServerSock;
 	unsigned long _SERVER_IP;
 	bool requestRoomAccess();
 	bool requestSendChat();
 
 
 public:
-	enum class Purpose {
-		REQUEST_ROOMLIST,
-		REQUEST_ROOMACCSESS,
-		REQUEST_SENDCHAT
-	};
 	std::vector<RoomInfo> requestRoomList();
-
+	bool Net_Connect();
 	TCP(std::string IPAddr);
 	~TCP();
 
