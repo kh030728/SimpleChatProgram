@@ -87,19 +87,7 @@ namespace SimpleChatClient
             byte[] buf = new byte[PACKET_SIZE];
             string msg = "REQUEST_ROOMINFO방정보요청\r\n";
 
-            
-            buf = System.Text.Encoding.ASCII.GetBytes(msg);
-            Console.WriteLine("전송할 문자 : {0}", msg);
-            try
-            {
-                Console.WriteLine("송신시 Socket 연결 : {0}", tcpc.Connected);
-                stream.Write(buf, 0, buf.Length);
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine("송신 실패 : {0}",e);
-            }
-            Thread.Sleep(10);
+
             buf = System.Text.Encoding.UTF8.GetBytes(msg);
             Console.WriteLine("전송할 문자 : {0}", msg);
             try
@@ -124,54 +112,8 @@ namespace SimpleChatClient
                 Console.WriteLine("송신 실패 : {0}", e);
             }
             Thread.Sleep(10);
-            buf = System.Text.Encoding.Default.GetBytes(msg);
-            Console.WriteLine("전송할 문자 : {0}", msg);
-            try
-            {
-                Console.WriteLine("송신시 Socket 연결 : {0}", tcpc.Connected);
-                stream.Write(buf, 0, buf.Length);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("송신 실패 : {0}", e);
-            }
-            Thread.Sleep(10);
-            buf = System.Text.Encoding.UTF7.GetBytes(msg);
-            Console.WriteLine("전송할 문자 : {0}", msg);
-            try
-            {
-                Console.WriteLine("송신시 Socket 연결 : {0}", tcpc.Connected);
-                stream.Write(buf, 0, buf.Length);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("송신 실패 : {0}", e);
-            }
-            Thread.Sleep(10);
-            buf = System.Text.Encoding.UTF8.GetBytes(msg);
-            Console.WriteLine("전송할 문자 : {0}", msg);
-            try
-            {
-                Console.WriteLine("송신시 Socket 연결 : {0}", tcpc.Connected);
-                stream.Write(buf, 0, buf.Length);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("송신 실패 : {0}", e);
-            }
-            Thread.Sleep(10);
-            buf = System.Text.Encoding.BigEndianUnicode.GetBytes(msg);
-            Console.WriteLine("전송할 문자 : {0}", msg);
-            try
-            {
-                Console.WriteLine("송신시 Socket 연결 : {0}", tcpc.Connected);
-                stream.Write(buf, 0, buf.Length);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("송신 실패 : {0}", e);
-            }
-            Thread.Sleep(10);
+           
+
             // recv 구현부
             byte[] inbuf = new byte[PACKET_SIZE];
             try
