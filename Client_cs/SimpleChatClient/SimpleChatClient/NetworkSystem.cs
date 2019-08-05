@@ -88,7 +88,7 @@ namespace SimpleChatClient
             string msg = "REQUEST_ROOMINFO방정보요청\r\n";
 
             
-            buf = System.Text.Encoding.Unicode.GetBytes(msg);
+            buf = System.Text.Encoding.UTF8.GetBytes(msg);
             Console.WriteLine("전송할 문자 : {0}", msg);
             try
             {
@@ -111,7 +111,7 @@ namespace SimpleChatClient
             {
                 Console.WriteLine("수신 실패 : {0}",e);
             }
-            Console.WriteLine("결과 {0}", System.Text.Encoding.Unicode.GetString(inbuf));
+            Console.WriteLine("결과 {0}", System.Text.Encoding.UTF8.GetString(inbuf));
             
         }
         // 방에 접속을 요청하는 메소드
