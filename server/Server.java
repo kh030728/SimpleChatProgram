@@ -20,7 +20,7 @@ public class Server {
 			socket = serverSocket.accept(); // 家南积己 皋家靛 accept();
 			Thread th1 = new SenderThread(socket);
 			Thread th2 = new ReceiverThread(socket);
-			th1.start();
+			//th1.start();
 			th2.start();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

@@ -22,22 +22,14 @@ public class SenderThread extends Thread {
 	@Override
 	public void run() {
 		try {
-			RoomInfo roomInfo = new RoomInfo();
 			
 			//입력으로 들어오는 스트림의 속도 향상
 			BufferedReader Breader = new BufferedReader(new InputStreamReader(System.in));
-			BufferedWriter Bwriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			PrintWriter Pwriter = new PrintWriter(socket.getOutputStream()); //출력 스트림
 			while(true) {
 				String str = Breader.readLine(); //입력된 데이타를 한 줄 단위로 읽음
+				System.out.println(str);
 				if(str.equals("bye")) break; //입력값이 bye면 클라이언트 종료
-				if(str.equals("REQUEST_ROOMINFO")) {
-					for(int i = 0; i < roomInfo.sizeRoom();i++) {
-						Bwriter.write("RNo"+i+"RNa"+roomInfo.nameRoom(i)+"RPN"+roomInfo.peopleNumber(i));
-						Pwriter.println("RNo"+i+"RNa"+roomInfo.nameRoom(i)+"RPN"+roomInfo.peopleNumber(i));
-					}
-				}
-				//Pwriter.println("RNo1"+"RNa"+roomInfo.nameRoom(0)+"RPN"+roomInfo.peopleNumber(0));
 				Pwriter.println(str); //bye가 아니면 메세지 전송
 				Pwriter.flush(); //버퍼내의 데이타 밀어내기
 			}
