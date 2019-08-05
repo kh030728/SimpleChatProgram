@@ -9,26 +9,27 @@ import java.util.ArrayList;
 public class Server {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		
-		//家南 积己
+
+		// 家南 积己
 		ServerSocket serverSocket = null;
 		Socket socket = null;
 		RoomInfo roomInfo = new RoomInfo();
-		
+
 		try {
-			serverSocket = new ServerSocket(6000); //port锅龋 4098肺 辑滚家南 积己
-			socket = serverSocket.accept(); //家南积己 皋家靛 accept();
+			serverSocket = new ServerSocket(6000); // port锅龋 4098肺 辑滚家南 积己
+			socket = serverSocket.accept(); // 家南积己 皋家靛 accept();
 			Thread th1 = new SenderThread(socket);
 			Thread th2 = new ReceiverThread(socket);
 			th1.start();
 			th2.start();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
-		} finally { //辑滚 辆丰矫 家南阑 秦力
-			try {
-				serverSocket.close();
-			} catch(Exception e) {
-				
+		} finally { // 辑滚 辆丰矫 家南阑 秦力
+			if (serverSocket != null) {
+				try {
+					serverSocket.close();
+				} catch (Exception e) {
+				}
 			}
 		}
 	}
