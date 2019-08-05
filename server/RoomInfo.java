@@ -3,28 +3,29 @@ package chattingProgram;
 import java.util.ArrayList;
 
 public class RoomInfo {
-	ArrayList<ArrayList<String>> roomInfo = new ArrayList();
-	ArrayList<String> InfoChild = new ArrayList();
+	ArrayList<String> roomName = new ArrayList();
+	ArrayList<String> roomPeople = new ArrayList();	
+	//ArrayList<String> InfoChild = new ArrayList();
 		
-	public void addRoom(String str) {
-		str = "This is Room Room Room"; 
-		InfoChild.add(str);
-		InfoChild.add("0");
-		roomInfo.add(InfoChild);
+	public void addRoom(String strNa, String strPe) {
+		//InfoChild.add(str);
+		//InfoChild.add("0");
+		roomName.add(strNa);
+		roomPeople.add(strPe);
 		}
 	
 	public int sizeRoom() {
-		int size = roomInfo.size();
+		int size = roomName.size();
 		return size;
 	}
 	
 	public String nameRoom(int i) {
-		String name = roomInfo.get(i).get(0);
+		String name = roomName.get(i);
 		return name;
 	}
 	
 	public String peopleNumber(int i) {
-		String PNumber = roomInfo.get(1).get(i);
+		String PNumber = roomPeople.get(i);
 		return PNumber;
 	}
 
