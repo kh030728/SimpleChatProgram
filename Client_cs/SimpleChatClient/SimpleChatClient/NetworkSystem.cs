@@ -95,6 +95,7 @@ namespace SimpleChatClient
             {
                 Console.WriteLine(e);
             }
+            // recv 구현부
         }
         // 방에 접속을 요청하는 메소드
         public void RequestJoin()
