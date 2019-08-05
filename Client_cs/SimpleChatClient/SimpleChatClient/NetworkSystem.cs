@@ -85,9 +85,9 @@ namespace SimpleChatClient
         public void RequestRoom()
         {
             byte[] buf = new byte[PACKET_SIZE];
-            string msg = "REQUEST_ROOMINFO방정보요청\r\n";
+            string msg = "REQUEST_ROOMINFO\r\n";
 
-            buf = System.Text.Encoding.Default.GetBytes("BigEndianUnicode"+msg);
+            buf = System.Text.Encoding.Default.GetBytes(msg);
             Console.WriteLine("전송할 문자 : {0}", msg);
             try
             {
