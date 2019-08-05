@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 //송신 thread 객체
 public class SenderThread extends Thread {
@@ -33,18 +34,20 @@ public class SenderThread extends Thread {
 				if(str.equals("REQUEST_ROOMINFO")) {
 					for(int i = 0; i < roomInfo.sizeRoom();i++) {
 						Bwriter.write("RNo"+i+"RNa"+roomInfo.nameRoom(i)+"RPN"+roomInfo.peopleNumber(i));
+						Pwriter.println("RNo"+i+"RNa"+roomInfo.nameRoom(i)+"RPN"+roomInfo.peopleNumber(i));
 					}
 				}
+				//Pwriter.println("RNo1"+"RNa"+roomInfo.nameRoom(0)+"RPN"+roomInfo.peopleNumber(0));
 				Pwriter.println(str); //bye가 아니면 메세지 전송
 				Pwriter.flush(); //버퍼내의 데이타 밀어내기
 			}
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
-		} finally {
+		} /*finally {
 			try {
 				socket.close(); //클라이언트 종료시 반드시 소켓 해제
 			} catch(Exception e) {
 			}
-		}
+		}*/
 	}
 }

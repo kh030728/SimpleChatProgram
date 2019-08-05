@@ -7,6 +7,7 @@ public class RoomInfo {
 	ArrayList<String> InfoChild = new ArrayList();
 		
 	public void addRoom(String str) {
+		str = "This is Room Room Room"; 
 		InfoChild.add(str);
 		InfoChild.add("0");
 		roomInfo.add(InfoChild);
