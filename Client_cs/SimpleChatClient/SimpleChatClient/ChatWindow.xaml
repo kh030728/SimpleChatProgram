@@ -45,7 +45,12 @@
                 <Button
                     Content="전송"
                     Margin="5"
-                    Grid.Column="1"/>
+                    Grid.Column="1"
+                    Foreground="WhiteSmoke">
+                    <Button.Background>
+                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
+                    </Button.Background>
+                </Button>
             </Grid>
         </Grid>
     </Border>

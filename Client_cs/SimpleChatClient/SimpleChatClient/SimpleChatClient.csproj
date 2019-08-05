@@ -61,7 +61,7 @@
     <Compile Include="ChatWindow.xaml.cs">
       <DependentUpon>ChatWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TCPCli.cs" />
+    <Compile Include="NetworkSystem.cs" />
     <Compile Include="RoomListWindow.xaml.cs">
       <DependentUpon>RoomListWindow.xaml</DependentUpon>
     </Compile>
