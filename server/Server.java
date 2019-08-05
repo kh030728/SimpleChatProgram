@@ -15,10 +15,6 @@ public class Server {
 		Socket socket = null;
 		RoomInfo roomInfo = new RoomInfo();
 		
-		roomInfo.addRoom("1번 방입니다.");
-		roomInfo.addRoom("2번 방이지요~");
-		roomInfo.addRoom("3번 방인데수!");
-		
 		try {
 			serverSocket = new ServerSocket(6000); //port번호 4098로 서버소켓 생성
 			socket = serverSocket.accept(); //소켓생성 메소드 accept();
