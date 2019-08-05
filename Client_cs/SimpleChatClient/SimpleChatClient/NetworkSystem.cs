@@ -84,18 +84,32 @@ namespace SimpleChatClient
         // 방정보를 요청하는 메소드
         public void RequestRoom()
         {
-            Byte[] buf = new Byte[PACKET_SIZE];
+            byte[] buf = new byte[PACKET_SIZE];
             string msg = "REQUEST_ROOMINFO";
             buf = Encoding.ASCII.GetBytes(msg);
             try
             {
+                Console.WriteLine("송신시 Socket 연결 : {0}", tcpc.Connected);
                 stream.Write(buf, 0, buf.Length);
             }
             catch(Exception e)
             {
-                Console.WriteLine(e);
+                Console.WriteLine("송신 실패 : {0}",e);
             }
+            
             // recv 구현부
+            byte[] inbuf = new byte[PACKET_SIZE];
+            try
+            {
+                Console.WriteLine("수신시 Socket 연결 : {0}", tcpc.Connected);
+                Console.WriteLine("Read 반환 코드 : {0}",stream.Read(inbuf, 0, inbuf.Length));
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("수신 실패 : {0}",e);
+            }
+            Console.WriteLine("결과 {0}", Encoding.ASCII.GetString(inbuf));
+            
         }
         // 방에 접속을 요청하는 메소드
         public void RequestJoin()
