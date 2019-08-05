@@ -1,0 +1,58 @@
+﻿<Window x:Class="SimpleChatClient.ChatWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SimpleChatClient"
+        mc:Ignorable="d"
+        Title="ChatWindow" Height="450" Width="600"
+        ResizeMode="NoResize">
+    <Border
+        Padding="10"
+        Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}">
+        <Grid
+            Background="White">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="4*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid
+                Grid.Row="0">
+                <Grid
+                    Margin="0 0 0 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <ScrollViewer
+                        Grid.Column="0"
+                        Name="sv_chatlog"/>
+                    <ListView
+                        Grid.Column="1"
+                        Name="sv_Userlist"/>
+                </Grid>
+            </Grid>
+            <Grid
+                Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBox
+                    Name="tbx_chatInput"
+                    Margin="5"
+                    Grid.Column="0"/>
+                <Button
+                    Content="전송"
+                    Margin="5"
+                    Grid.Column="1"
+                    Foreground="WhiteSmoke">
+                    <Button.Background>
+                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
+                    </Button.Background>
+                </Button>
+            </Grid>
+        </Grid>
+    </Border>
+
+</Window>

@@ -3,23 +3,48 @@
 std::vector<RoomInfo> TCP::requestRoomList()
 {
 	std::vector<RoomInfo> output;
-	toRoomInfo = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-	SOCKADDR_IN roomInfoAddr = {};
-	roomInfoAddr.sin_family = AF_INET;
-	roomInfoAddr.sin_port = ROOM_PORT;
-	roomInfoAddr.sin_addr.S_un.S_addr = _SERVER_IP;
-
-	connect(toRoomInfo, (SOCKADDR*)&roomInfoAddr, sizeof(roomInfoAddr));
-
-	char cBuffer[PACKET_SIZE] = {};
+	char cBuffer[PACKET_SIZE] = "REQUEST_ROOMINFO";
 	std::string info = "";
-	int flag = 1;
-	while (!((flag != 0) ^ (flag != -1)))
-	{
-		flag = recv(toRoomInfo, cBuffer, PACKET_SIZE, 0);
-		info = cBuffer;
+	try {
+		send(toServerSock, cBuffer, PACKET_SIZE, 0);
 	}
+	catch (int e)
+	{
+		std::cout << "TCP send failed" << std::endl;
+		return output;
+	}
+	std::cout << "전송한 메시지 : " << cBuffer << std::endl;
+	try {
+		recv(toServerSock, cBuffer, PACKET_SIZE, 0);
+		info = cBuffer;
+		std::cout << "받은 메시지 : " << info.c_str() << std::endl;
+	}
+	catch(int e)
+	{
+		std::cout << "RoomInfo를 받아오는데 실패" << std::endl;
+	}
+
 	return output;
+}
+
+bool TCP::Net_Connect()
+{
+	try
+	{
+		toServerSock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+		SOCKADDR_IN serverAddr = {};
+		serverAddr.sin_family = AF_INET;
+		serverAddr.sin_port = ROOM_PORT;
+		serverAddr.sin_addr.S_un.S_addr = _SERVER_IP;
+		connect(toServerSock, (SOCKADDR*)&serverAddr, sizeof(serverAddr));
+		std::cout << "연결완료" << std::endl;
+		return true;
+	}
+	catch(int e)
+	{
+		std::cout << "[Error] TCP Connection failed..." << std::endl;
+		return false;
+	}
 }
 
 bool TCP::requestRoomAccess()
@@ -42,15 +67,4 @@ TCP::TCP(std::string IPAddr)
 TCP::~TCP()
 {
 	WSACleanup();
-}
-
-bool TCP::send(Purpose purpose, std::string input)
-{
-	switch (purpose)
-	{
-	case Purpose::REQUEST_ROOMLIST:
-		std::cout << "Request room list" << std::endl;
-	default:
-		return false;
-	}
 }
