@@ -85,8 +85,11 @@ namespace SimpleChatClient
         public void RequestRoom()
         {
             byte[] buf = new byte[PACKET_SIZE];
-            string msg = "REQUEST_ROOMINFO";
-            buf = Encoding.UTF8.GetBytes(msg);
+            string msg = "REQUEST_ROOMINFO방정보요청";
+
+            
+            buf = System.Text.Encoding.Unicode.GetBytes(msg);
+            Console.WriteLine("전송할 문자 : {0}", msg);
             try
             {
                 Console.WriteLine("송신시 Socket 연결 : {0}", tcpc.Connected);
@@ -108,7 +111,7 @@ namespace SimpleChatClient
             {
                 Console.WriteLine("수신 실패 : {0}",e);
             }
-            Console.WriteLine("결과 {0}", Encoding.UTF8.GetString(inbuf));
+            Console.WriteLine("결과 {0}", System.Text.Encoding.Unicode.GetString(inbuf));
             
         }
         // 방에 접속을 요청하는 메소드
