@@ -86,7 +86,7 @@ namespace SimpleChatClient
         {
             byte[] buf = new byte[PACKET_SIZE];
             string msg = "REQUEST_ROOMINFO";
-            buf = Encoding.ASCII.GetBytes(msg);
+            buf = Encoding.UTF8.GetBytes(msg);
             try
             {
                 Console.WriteLine("송신시 Socket 연결 : {0}", tcpc.Connected);
@@ -108,7 +108,7 @@ namespace SimpleChatClient
             {
                 Console.WriteLine("수신 실패 : {0}",e);
             }
-            Console.WriteLine("결과 {0}", Encoding.ASCII.GetString(inbuf));
+            Console.WriteLine("결과 {0}", Encoding.UTF8.GetString(inbuf));
             
         }
         // 방에 접속을 요청하는 메소드
