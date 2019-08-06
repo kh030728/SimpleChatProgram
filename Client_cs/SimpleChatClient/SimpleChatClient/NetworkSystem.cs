@@ -82,36 +82,57 @@ namespace SimpleChatClient
             return;
         }
         // 방정보를 요청하는 메소드
-        public void RequestRoom()
-        {
+        public void RequestRoom(List<Room> input)
+        {   
             byte[] buf = new byte[PACKET_SIZE];
             string msg = "REQUEST_ROOMINFO\r\n";
+            string inMsg = String.Empty;
 
             buf = System.Text.Encoding.Default.GetBytes(msg);
-            Console.WriteLine("전송할 문자 : {0}", msg);
+            if(tcpc.Connected == false)
+            {
+                Console.WriteLine("Socket closed. you can't send a message.");
+                return;
+            }
             try
             {
-                Console.WriteLine("송신시 Socket 연결 : {0}", tcpc.Connected);
+                Console.WriteLine("Socket Connected : {0}\nC >> {1}", tcpc.Connected ,msg);
                 stream.Write(buf, 0, buf.Length);
             }
             catch (Exception e)
             {
-                Console.WriteLine("송신 실패 : {0}", e);
+                Console.WriteLine("Send Failed\n{0}",e);
             }
             Thread.Sleep(10);
             // recv 구현부
-            byte[] inbuf = new byte[PACKET_SIZE];
-            try
+            while(true)
             {
-                Console.WriteLine("수신시 Socket 연결 : {0}", tcpc.Connected);
-                Console.WriteLine("Read 반환 코드 : {0}",stream.Read(inbuf, 0, inbuf.Length));
+                if (tcpc.Connected == false)
+                {
+                    Console.WriteLine("Socket closed. you can't send a message.");
+                    return;
+                }
+                byte[] inbuf = new byte[PACKET_SIZE];
+                try
+                {
+                    stream.Read(inbuf, 0, inbuf.Length);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Receive Failed\n{0}", e);
+                }
+                inMsg = System.Text.Encoding.Default.GetString(inbuf).Trim(new char[] { '\0', '\n', '\r' });
+                if (inMsg == "GoodBye")
+                    break;
+                string[] seperator = { "RNo", "RNa", "RPN" };
+                string[] array = inMsg.Split(seperator, StringSplitOptions.RemoveEmptyEntries);
+                input.Add(new Room(array[1],int.Parse(array[0]),int.Parse(array[2])));
             }
-            catch(Exception e)
+            foreach(Room elem in input)
             {
-                Console.WriteLine("수신 실패 : {0}",e);
+                Console.WriteLine("방번호 {0} 이름 {1} 인원수 {2}", elem.ID, elem.NAME, elem.PEOPLE);
             }
-            Console.WriteLine("결과 {0}", System.Text.Encoding.Default.GetString(inbuf));
-            
+            Console.WriteLine("End");
         }
         // 방에 접속을 요청하는 메소드
         public void RequestJoin()

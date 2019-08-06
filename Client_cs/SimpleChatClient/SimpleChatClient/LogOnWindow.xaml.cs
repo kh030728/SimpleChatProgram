@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Threading;
+using System.Collections.Generic;
 namespace SimpleChatClient
 {
     /// <summary>
@@ -61,7 +62,8 @@ namespace SimpleChatClient
             if(ns.NetWorkConnectionStatus == true)
             {
                 LOW_tB_statusMsg.Dispatcher.BeginInvoke(new InvokeDelegate(ChangeSuccess));
-                ns.RequestRoom();
+                List<Room> rooms = new List<Room>();
+                ns.RequestRoom(rooms);
             }
             else
             {
