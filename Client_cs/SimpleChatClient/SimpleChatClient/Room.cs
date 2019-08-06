@@ -12,7 +12,7 @@ namespace SimpleChatClient
         private int id; public int ID { get { return id; } set { id = value; } }
         private int people; public int PEOPLE { get { return people; } set { people = value; } }
 
-        Room(string _name, int _id, int _people)
+        public Room(string _name, int _id, int _people)
         {
             name = _name;
             id = _id;
