@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimpleChatClient
 {
-    class Room
+    public class Room
     {
         private string name; public string NAME { get { return name; } set { name = value; } }
         private int id; public int ID { get { return id; } set { id = value; } }

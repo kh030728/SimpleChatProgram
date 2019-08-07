@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Generic;
 namespace SimpleChatClient
@@ -13,13 +14,11 @@ namespace SimpleChatClient
     {
         NetworkSystem ns = null;
         bool buttonExecuteFlag = false;
-        public delegate void InvokeDelegate();
-
+        private delegate void InvokeDelegate();
         public LogOnWindow()
         {
             InitializeComponent();
         }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (buttonExecuteFlag == false)
@@ -45,8 +44,12 @@ namespace SimpleChatClient
 
                 ns.Connect(IPAddr, NickName);
                 ControlStatusMsg("연결중...", Colors.RoyalBlue, true);
-                Thread reflectTheConnectResultThread = new Thread(ReflectTheConnectResultThread);
-                reflectTheConnectResultThread.Start();
+                //Thread reflectTheConnectResultThread = new Thread(ReflectTheConnectResultThread);
+                //reflectTheConnectResultThread.Start();
+
+                Thread task = new Thread(ReflectTheConnectResultThread);
+                task.Start();
+                
             }
         }
         private void ReflectTheConnectResultThread()
@@ -61,13 +64,29 @@ namespace SimpleChatClient
             }
             if(ns.NetWorkConnectionStatus == true)
             {
+                
                 LOW_tB_statusMsg.Dispatcher.BeginInvoke(new InvokeDelegate(ChangeSuccess));
                 List<Room> rooms = new List<Room>();
                 ns.RequestRoom(rooms);
+                buttonExecuteFlag = false;
+                Thread thread = new Thread
+                (
+                    () =>
+                    {
+                        RoomListWindow roomListWindow = new RoomListWindow(rooms);
+                        roomListWindow.Closed += (sender2, e2) => roomListWindow.Dispatcher.InvokeShutdown();
+                        roomListWindow.Show();
+                        System.Windows.Threading.Dispatcher.Run();
+                    }
+                );
+                thread.SetApartmentState(ApartmentState.STA); // STA로 스레드를 실행시킨 다는것, UI나 Window에 접근 가능해진다는 것.
+                thread.Start();
+                this.Dispatcher.InvokeShutdown();
             }
             else
             {
                 LOW_tB_statusMsg.Dispatcher.BeginInvoke(new InvokeDelegate(ChangeFail));
+                ns.ConnectThreadFinishFlag = false;
             }
             buttonExecuteFlag = false;
         }
