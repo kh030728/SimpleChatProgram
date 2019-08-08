@@ -11,34 +11,13 @@ using System.Threading;
 namespace SimpleChatClient
 {
     // 싱글톤 패턴으로 단하나의 객체를 갖는다.
-    class NetworkSystem
+    public class NetworkSystem
     {
         private static NetworkSystem instance = null;
         private NetworkStream stream;
         private static TcpClient tcpc = null;
         private readonly int PACKET_SIZE = 1024;
-        private bool netWorkConnectionStaust = false;
-        public bool NetWorkConnectionStatus
-        {
-            get
-            {
-                return netWorkConnectionStaust;
-            }
-        }
-        private bool connectThreadFinishFlag = false;
-        public bool ConnectThreadFinishFlag
-        {
-            get
-            {
-                return connectThreadFinishFlag;
-            }
-            set
-            {
-                connectThreadFinishFlag = value;
-            }
-        }
         private NetworkSystem() { }
-        private string _ipAddr = "";
         private string _nickName = "";
         public static NetworkSystem Instance
         {
@@ -50,46 +29,39 @@ namespace SimpleChatClient
             }
         }
         // 네트워크 연결을 수행하는 메소드
-        public void Connect(string ipAddr, string nickName)
-        {
-            if (tcpc != null)
-                return;
-            connectThreadFinishFlag = false;
-            _ipAddr = ipAddr;
-            _nickName = nickName;
-            
-            Thread connectThread = new Thread(ConnectThread);
-            connectThread.Start();
-            return;
-        }
-        private void ConnectThread()
+
+        /// <summary>
+        /// STA가 아닌 다른 스레드에서 수행하세요.
+        /// 연결이 된다면 해당 스레드 에서 RequestRoom또한 실행하세요.
+        /// 연결에 성공한다면 0을 실패한다면 -1을 반환합니다.
+        /// </summary>
+        /// <param name="ipAddr"></param>
+        /// <param name="nickName"></param>
+        /// <returns></returns>
+        public int Connect(string ipAddr, string nickName)
         {
             int port = 6000;
-            Console.WriteLine("Start ConnectThread...\n IP Address : {0} Port : {1} NickName : {2}",_ipAddr,port,_nickName);
-            Console.Write("Socket connection...");
+            _nickName = nickName;
+            Console.WriteLine("NetworkSystem::Connect(string ipAddr,string nickName) Start ...");
+            Console.Write("Generating Socket... ");
             try
             {
-                tcpc = new TcpClient(_ipAddr, port);
+                tcpc = new TcpClient(ipAddr, port);
             }
             catch
             {
                 Console.WriteLine("Failed");
-                return;
+                tcpc = null;
+                return -1;
             }
-            finally
-            {
-                connectThreadFinishFlag = true;
-            }
-            Console.WriteLine(" OK");
-            Console.Write("GetStream... ");
-            stream = tcpc.GetStream();
             Console.WriteLine("OK");
+            stream = tcpc.GetStream();
             Console.Write("Send NickName {0} ...", _nickName);
-            byte[] buf = new byte[PACKET_SIZE];
-            buf = System.Text.Encoding.Default.GetBytes("NICKNAME_" + _nickName + "\r\n");
             try
             {
-                stream.Write(buf, 0, buf.Length);
+                byte[] buff = new byte[1024];
+                buff = System.Text.Encoding.Default.GetBytes(_nickName + "\r\n");
+                stream.Write(buff, 0, buff.Length);
                 Thread.Sleep(10);
             }
             catch
@@ -99,17 +71,15 @@ namespace SimpleChatClient
                 stream.Close();
                 tcpc = null;
                 stream = null;
-                return;
+                return -1;
             }
             Console.WriteLine("OK");
-            netWorkConnectionStaust = true;
-            return;
+            return 0;
         }
-
-
-
-        //------------------------------------------------------------------------------------//
-        // 방정보를 요청하는 메소드
+        /// <summary>
+        /// 채팅방에 대한 정보를 서버에 요청하여 받아오는 메소드입니다.
+        /// </summary>
+        /// <param name="input"></param>
         public void RequestRoom(List<Room> input)
         {   
             byte[] buf = new byte[PACKET_SIZE];
@@ -141,20 +111,24 @@ namespace SimpleChatClient
                     return;
                 }
                 byte[] inbuf = new byte[PACKET_SIZE];
+                int recvByteCount = 0;
                 try
                 {
-                    stream.Read(inbuf, 0, inbuf.Length);
+                    recvByteCount = stream.Read(inbuf, 0, inbuf.Length);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("Receive Failed\n{0}", e);
                 }
-                inMsg = System.Text.Encoding.Default.GetString(inbuf).Trim(new char[] { '\0', '\n', '\r' });
-                if (inMsg == "COMEND")
-                    break;
-                string[] seperator = { "RNo", "RNa", "RPN" };
-                string[] array = inMsg.Split(seperator, StringSplitOptions.RemoveEmptyEntries);
-                input.Add(new Room(array[1],int.Parse(array[0]),int.Parse(array[2])));
+                if (recvByteCount > 0)
+                {
+                    inMsg = System.Text.Encoding.Default.GetString(inbuf).Trim(new char[] { '\0', '\n', '\r' });
+                    if (inMsg == "COMEND")
+                        break;
+                    string[] seperator = { "RNo", "RNa", "RPN" };
+                    string[] array = inMsg.Split(seperator, StringSplitOptions.RemoveEmptyEntries);
+                    input.Add(new Room(array[1], int.Parse(array[0]), int.Parse(array[2])));
+                }
             }
             foreach(Room elem in input)
             {

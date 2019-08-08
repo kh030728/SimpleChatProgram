@@ -20,10 +20,23 @@ namespace SimpleChatClient
     public partial class RoomListWindow : Window
     {
         private List<Room> rooms;
+        private NetworkSystem ns;
         public RoomListWindow(List<Room> input)
         {
             rooms = input;
+            ns = NetworkSystem.Instance;
             InitializeComponent();
+            RoomListView.ItemsSource = rooms;
+        }
+
+
+        private void Btn_exit_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+        private void Btn_refresh_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }
