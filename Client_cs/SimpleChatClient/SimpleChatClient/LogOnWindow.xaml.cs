@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Generic;
 namespace SimpleChatClient
@@ -13,13 +14,11 @@ namespace SimpleChatClient
     {
         NetworkSystem ns = null;
         bool buttonExecuteFlag = false;
-        public delegate void InvokeDelegate();
-
+        private delegate void InvokeDelegate();
         public LogOnWindow()
         {
             InitializeComponent();
         }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (buttonExecuteFlag == false)
@@ -28,13 +27,13 @@ namespace SimpleChatClient
 
                 if (tb_IPAddr.Text == "")
                 {
-                    ControlStatusMsg("IP주소를 입력하여 주세요.",Colors.Red,true);
+                    ControlStatusMsg("IP주소를 입력하여 주세요.", Colors.Red, true);
                     buttonExecuteFlag = false;
                     return;
                 }
                 if (tb_NickName.Text == "")
                 {
-                    ControlStatusMsg("닉네임을 입력하여 주세요.",Colors.Red,true);
+                    ControlStatusMsg("닉네임을 입력하여 주세요.", Colors.Red, true);
                     buttonExecuteFlag = false;
                     return;
                 }
@@ -42,42 +41,48 @@ namespace SimpleChatClient
                 ns = NetworkSystem.Instance;
                 string IPAddr = tb_IPAddr.Text;
                 string NickName = tb_NickName.Text;
-
-                ns.Connect(IPAddr, NickName);
                 ControlStatusMsg("연결중...", Colors.RoyalBlue, true);
-                Thread reflectTheConnectResultThread = new Thread(ReflectTheConnectResultThread);
-                reflectTheConnectResultThread.Start();
+                Thread thread = new Thread( //네트워크 연결을 다루는 스레드
+                    () =>
+                    {
+                        if (ns.Connect(IPAddr, NickName) < 0) // 실패한경우
+                        {
+                            LOW_tB_statusMsg.Dispatcher.Invoke(() => { ControlStatusMsg("연결 실패", Colors.Red, true); });
+                            buttonExecuteFlag = false;
+                            return;
+                        }
+                        else
+                        {   //성공한경우
+                            LOW_tB_statusMsg.Dispatcher.Invoke(() => { ControlStatusMsg("연결 성공", Colors.RoyalBlue, true); });
+                            List<Room> rooms = new List<Room>();
+                            ns.RequestRoom(rooms);
+                            Thread thread2 = new Thread
+                            (
+                                () =>
+                                {
+                                    RoomListWindow roomListWindow = new RoomListWindow(rooms);
+                                    roomListWindow.Closed += (sender2, e2) => roomListWindow.Dispatcher.InvokeShutdown();
+                                    roomListWindow.Show();
+                                    System.Windows.Threading.Dispatcher.Run();
+                                }
+                            );
+                            thread2.SetApartmentState(ApartmentState.STA);
+                            thread2.Start();
+                            this.Dispatcher.InvokeShutdown();
+                            buttonExecuteFlag = false;
+                        }
+                    });
+                thread.Start();
+
             }
         }
-        private void ReflectTheConnectResultThread()
-        {
-            while (true)
-            {
-                Thread.Sleep(100);
-                if(ns.ConnectThreadFinishFlag == true)
-                {
-                    break;
-                }
-            }
-            if(ns.NetWorkConnectionStatus == true)
-            {
-                LOW_tB_statusMsg.Dispatcher.BeginInvoke(new InvokeDelegate(ChangeSuccess));
-                List<Room> rooms = new List<Room>();
-                ns.RequestRoom(rooms);
-            }
-            else
-            {
-                LOW_tB_statusMsg.Dispatcher.BeginInvoke(new InvokeDelegate(ChangeFail));
-            }
-            buttonExecuteFlag = false;
-        }
-        private void ChangeSuccess() { ControlStatusMsg("연결 성공", Colors.RoyalBlue, true);}
+        private void ChangeSuccess() { ControlStatusMsg("연결 성공", Colors.RoyalBlue, true); }
         private void ChangeFail() { ControlStatusMsg("연결 실패", Colors.Red, true); }
-        private void ControlStatusMsg(string msg, Color color,bool visible)
+        private void ControlStatusMsg(string msg, Color color, bool visible)
         {
             LOW_tB_statusMsg.Text = msg;
             LOW_tB_statusMsg.Background = new SolidColorBrush(color);
-            if(visible ==true)
+            if (visible == true)
                 LOW_tB_statusMsg.Visibility = Visibility.Visible;
             else
                 LOW_tB_statusMsg.Visibility = Visibility.Hidden;
