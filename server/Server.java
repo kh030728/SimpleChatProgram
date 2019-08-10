@@ -16,7 +16,7 @@ public class Server {
 		RoomInfo roomInfo = new RoomInfo();
 
 		try {
-			serverSocket = new ServerSocket(6000); // port锅龋 4098肺 辑滚家南 积己
+			serverSocket = new ServerSocket(6000); // port锅龋 6000肺 辑滚家南 积己
 			socket = serverSocket.accept(); // 家南积己 皋家靛 accept();
 			Thread th1 = new SenderThread(socket);
 			Thread th2 = new ReceiverThread(socket);
