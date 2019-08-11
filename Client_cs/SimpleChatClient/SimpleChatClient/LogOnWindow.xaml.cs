@@ -64,11 +64,12 @@ namespace SimpleChatClient
                                 roomListWindow.Closed += (sender2, e2) => roomListWindow.Dispatcher.InvokeShutdown();
                                 roomListWindow.Show();
                                 System.Windows.Threading.Dispatcher.Run();
-                                this.Dispatcher.BeginInvokeShutdown(System.Windows.Threading.DispatcherPriority.Normal);
                             }
                         );
                         thread2.SetApartmentState(ApartmentState.STA);
                         thread2.Start();
+                        Thread.Sleep(500);
+                        this.Dispatcher.BeginInvokeShutdown(System.Windows.Threading.DispatcherPriority.Normal);
                         buttonExecuteFlag = false;
 
                     });
