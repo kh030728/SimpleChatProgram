@@ -51,10 +51,10 @@ namespace SimpleChatClient
                             buttonExecuteFlag = false;
                             return;
                         }   //성공한경우
-                        Console.WriteLine("방정보 받아오기 성공");
                         LOW_tB_statusMsg.Dispatcher.Invoke(() => { ControlStatusMsg("연결 성공", Colors.RoyalBlue, true); });
                         List<Room> rooms = new List<Room>();
                         ns.RequestRoom(rooms);
+                        Console.WriteLine("방정보 받아오기 성공");
                         Thread thread2 = new Thread
                         (
                             () =>
@@ -64,12 +64,11 @@ namespace SimpleChatClient
                                 roomListWindow.Closed += (sender2, e2) => roomListWindow.Dispatcher.InvokeShutdown();
                                 roomListWindow.Show();
                                 System.Windows.Threading.Dispatcher.Run();
+                                this.Dispatcher.InvokeShutdown();
                             }
                         );
                         thread2.SetApartmentState(ApartmentState.STA);
                         thread2.Start();
-                        thread2.Join();
-                        this.Dispatcher.InvokeShutdown();
                         buttonExecuteFlag = false;
 
                     });
