@@ -144,7 +144,7 @@ namespace SimpleChatClient
         public int RequestCreate(string RNa)
         {
             byte[] buff = new byte[1024];
-            string msg = "REQUEST_CREATE_"+RNa+"\r\n";
+            string msg = "REQUEST_CREATE_ROOM_"+RNa+"\r\n";
             string inMsg = string.Empty;
             buff = System.Text.Encoding.Default.GetBytes(msg);
             Console.WriteLine("RequestCreate method start!");

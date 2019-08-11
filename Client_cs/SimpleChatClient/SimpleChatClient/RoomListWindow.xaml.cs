@@ -49,6 +49,7 @@ namespace SimpleChatClient
                 btn_refresh.IsEnabled = true;
                 btn_createRoom.IsEnabled = true;
             });
+            refreshTask.Start();
         }
 
         private void Btn_createRoom_Click(object sender, RoutedEventArgs e)
