@@ -19,6 +19,13 @@ namespace SimpleChatClient
         private readonly int PACKET_SIZE = 1024;
         private NetworkSystem() { }
         private string _nickName = "";
+        public string NICKNAME
+        {
+            get
+            {
+                return _nickName;
+            }
+        }
         public static NetworkSystem Instance
         {
             get

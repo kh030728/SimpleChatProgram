@@ -14,7 +14,7 @@
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <ListView Margin="10" Name ="RoomListView" Grid.Column="0">
+            <ListView Margin="10 10 10 10" Name ="RoomListView" Grid.Column="0">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="번호" Width ="40" DisplayMemberBinding="{Binding ID}"/>
@@ -26,22 +26,28 @@
             <StackPanel 
                 Grid.Column="1"
                 Orientation="Vertical">
+
+                <TextBlock 
+                    Text="닉네임"
+                    FontSize="15"
+                    Margin="11"
+                    Name="TB_NickName"/>
                 <Button
                     Name="btn_refresh"
                     Content="새로고침"
-                    Margin="10"
+                    Margin="10 10 10 10"
                     Height="30"
                     Click="Btn_refresh_Click"/>
                 <Button 
                     Name="btn_createRoom"
                     Content="방만들기"
-                    Margin="10"
+                    Margin="10 20 10 10"
                     Height="30"
                     Click="Btn_createRoom_Click"/>
                 <Button
                     Name="btn_exit"
                     Content="종료"
-                    Margin="10 250 10 10"
+                    Margin="10 190 10 10"
                     Height="30"
                     Click="Btn_exit_Click"/>
             </StackPanel>

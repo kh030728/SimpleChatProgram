@@ -20,6 +20,7 @@ namespace SimpleChatClient
             ns = NetworkSystem.Instance;
             InitializeComponent();
             RoomListView.ItemsSource = rooms;
+            TB_NickName.Text = ns.NICKNAME;
         }
 
 
