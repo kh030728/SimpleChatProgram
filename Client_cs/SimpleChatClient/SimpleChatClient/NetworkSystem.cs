@@ -60,7 +60,7 @@ namespace SimpleChatClient
             try
             {
                 byte[] buff = new byte[1024];
-                buff = System.Text.Encoding.Default.GetBytes(_nickName + "\r\n");
+                buff = System.Text.Encoding.Default.GetBytes("NICKNAME_"+_nickName + "\r\n");
                 stream.Write(buff, 0, buff.Length);
                 Thread.Sleep(10);
             }
