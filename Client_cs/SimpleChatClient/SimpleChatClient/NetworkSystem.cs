@@ -80,7 +80,7 @@ namespace SimpleChatClient
         /// 채팅방에 대한 정보를 서버에 요청하여 받아오는 메소드입니다.
         /// </summary>
         /// <param name="input"></param>
-        public void RequestRoom(List<Room> input)
+        public int RequestRoom(List<Room> input)
         {   
             byte[] buf = new byte[PACKET_SIZE];
             string msg = "REQUEST_ROOMINFO\r\n";
@@ -90,7 +90,7 @@ namespace SimpleChatClient
             if(tcpc.Connected == false)
             {
                 Console.WriteLine("Socket closed. you can't send a message.");
-                return;
+                return -1;
             }
             try
             {
@@ -100,6 +100,7 @@ namespace SimpleChatClient
             catch (Exception e)
             {
                 Console.WriteLine("Send Failed\n{0}",e);
+                return -1;
             }
             Thread.Sleep(10);
             // recv 구현부
@@ -108,7 +109,7 @@ namespace SimpleChatClient
                 if (tcpc.Connected == false)
                 {
                     Console.WriteLine("Socket closed. you can't send a message.");
-                    return;
+                    return -1;
                 }
                 byte[] inbuf = new byte[PACKET_SIZE];
                 int recvByteCount = 0;
@@ -119,6 +120,7 @@ namespace SimpleChatClient
                 catch (Exception e)
                 {
                     Console.WriteLine("Receive Failed\n{0}", e);
+                    return -1;
                 }
                 if (recvByteCount > 0)
                 {
@@ -135,6 +137,43 @@ namespace SimpleChatClient
                 Console.WriteLine("방번호 {0} 이름 {1} 인원수 {2}", elem.ID, elem.NAME, elem.PEOPLE);
             }
             Console.WriteLine("End");
+
+            return 0;
+        }
+        // 방 생성을 요청하는 메소드
+        public int RequestCreate(string RNa)
+        {
+            byte[] buff = new byte[1024];
+            string msg = "REQUEST_CREATE_"+RNa+"\r\n";
+            string inMsg = string.Empty;
+            buff = System.Text.Encoding.Default.GetBytes(msg);
+            Console.WriteLine("RequestCreate method start!");
+            if (tcpc.Connected)
+            {
+                try
+                {
+                    Console.Write("Message : {0} Send...", msg);
+                    stream.Write(buff, 0, buff.Length);
+                    Console.WriteLine("OK");
+                    byte[] inbuf = new byte[1024];
+                    Console.Write("Message Read ...");
+                    stream.Read(inbuf, 0, inbuf.Length);
+                    Console.WriteLine("OK");
+                    inMsg = System.Text.Encoding.Default.GetString(inbuf);
+                    Console.WriteLine("The Received Message : {0}", inMsg);
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine("An Error has occurred \n {0}", e);
+                    return -1;
+                }
+            }
+            else
+            {
+                Console.Write("This Connection has been lost.");
+                return -1;
+            }
+            return 0;
         }
         // 방에 접속을 요청하는 메소드
         public void RequestJoin()

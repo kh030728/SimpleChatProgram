@@ -36,7 +36,8 @@
                     Name="btn_createRoom"
                     Content="방만들기"
                     Margin="10"
-                    Height="30"/>
+                    Height="30"
+                    Click="Btn_createRoom_Click"/>
                 <Button
                     Name="btn_exit"
                     Content="종료"

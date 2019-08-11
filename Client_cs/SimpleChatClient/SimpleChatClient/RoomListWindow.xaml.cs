@@ -4,18 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace SimpleChatClient
 {
     /// <summary>
-    /// Window1.xaml에 대한 상호 작용 논리
+    /// RoomListWindow.xaml에 대한 상호 작용 논리
     /// </summary>
     public partial class RoomListWindow : Window
     {
@@ -36,7 +29,43 @@ namespace SimpleChatClient
         }
         private void Btn_refresh_Click(object sender, RoutedEventArgs e)
         {
-            
+            btn_refresh.IsEnabled = false;
+            btn_createRoom.IsEnabled = false;
+            Console.WriteLine("Click refresh button");
+            Task refreshTask = new Task(() =>
+            {
+                List<Room> tmp = new List<Room>();
+                if(ns.RequestRoom(tmp) < 0)
+                { // 실패한경우
+                    btn_refresh.IsEnabled = true;
+                    btn_createRoom.IsEnabled = true;
+                    return;
+                }
+                else
+                {
+                    rooms = tmp;
+                    RoomListView.Items.Refresh();
+                }
+                btn_refresh.IsEnabled = true;
+                btn_createRoom.IsEnabled = true;
+            });
+        }
+
+        private void Btn_createRoom_Click(object sender, RoutedEventArgs e)
+        {
+            btn_refresh.IsEnabled = false;
+            btn_createRoom.IsEnabled = false;
+            Console.WriteLine("Click create button");
+            Task refreshTask = new Task(() =>
+            {
+                if(ns.RequestCreate("이름") < 0)
+                {
+
+                }
+                btn_refresh.IsEnabled = true;
+                btn_createRoom.IsEnabled = true;
+            });
+            refreshTask.Start();
         }
     }
 }

@@ -37,6 +37,7 @@
                             TextAlignment="Center"
                             Grid.Column="0"/>
                 <TextBox Name="tb_IPAddr"
+                         Text="127.0.0.1"
                             Grid.Column="1"
                              Height="20"
                             FocusManager.GotFocus="Tb_IPAddr_GotFocus"/>
