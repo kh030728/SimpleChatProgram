@@ -50,27 +50,27 @@ namespace SimpleChatClient
                             LOW_tB_statusMsg.Dispatcher.Invoke(() => { ControlStatusMsg("연결 실패", Colors.Red, true); });
                             buttonExecuteFlag = false;
                             return;
-                        }
-                        else
-                        {   //성공한경우
-                            LOW_tB_statusMsg.Dispatcher.Invoke(() => { ControlStatusMsg("연결 성공", Colors.RoyalBlue, true); });
-                            List<Room> rooms = new List<Room>();
-                            ns.RequestRoom(rooms);
-                            Thread thread2 = new Thread
-                            (
-                                () =>
-                                {
-                                    RoomListWindow roomListWindow = new RoomListWindow(rooms);
-                                    roomListWindow.Closed += (sender2, e2) => roomListWindow.Dispatcher.InvokeShutdown();
-                                    roomListWindow.Show();
-                                    System.Windows.Threading.Dispatcher.Run();
-                                }
-                            );
-                            thread2.SetApartmentState(ApartmentState.STA);
-                            thread2.Start();
-                            this.Dispatcher.InvokeShutdown();
-                            buttonExecuteFlag = false;
-                        }
+                        }   //성공한경우
+                        Console.WriteLine("방정보 받아오기 성공");
+                        LOW_tB_statusMsg.Dispatcher.Invoke(() => { ControlStatusMsg("연결 성공", Colors.RoyalBlue, true); });
+                        List<Room> rooms = new List<Room>();
+                        ns.RequestRoom(rooms);
+                        Thread thread2 = new Thread
+                        (
+                            () =>
+                            {
+                                Console.WriteLine("thread2 Start (RoomListWindow show)");
+                                RoomListWindow roomListWindow = new RoomListWindow(rooms);
+                                roomListWindow.Closed += (sender2, e2) => roomListWindow.Dispatcher.InvokeShutdown();
+                                roomListWindow.Show();
+                                System.Windows.Threading.Dispatcher.Run();
+                            }
+                        );
+                        thread2.SetApartmentState(ApartmentState.STA);
+                        thread2.Start();
+                        this.Dispatcher.InvokeShutdown();
+                        buttonExecuteFlag = false;
+
                     });
                 thread.Start();
 
