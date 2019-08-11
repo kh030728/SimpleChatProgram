@@ -68,7 +68,7 @@ namespace SimpleChatClient
                         );
                         thread2.SetApartmentState(ApartmentState.STA);
                         thread2.Start();
-                        Thread.Sleep(500);
+                        Thread.Sleep(100);
                         this.Dispatcher.BeginInvokeShutdown(System.Windows.Threading.DispatcherPriority.Normal);
                         buttonExecuteFlag = false;
 
