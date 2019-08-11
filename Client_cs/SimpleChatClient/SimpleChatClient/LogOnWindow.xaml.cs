@@ -64,7 +64,7 @@ namespace SimpleChatClient
                                 roomListWindow.Closed += (sender2, e2) => roomListWindow.Dispatcher.InvokeShutdown();
                                 roomListWindow.Show();
                                 System.Windows.Threading.Dispatcher.Run();
-                                this.Dispatcher.InvokeShutdown();
+                                this.Dispatcher.BeginInvokeShutdown(System.Windows.Threading.DispatcherPriority.Normal);
                             }
                         );
                         thread2.SetApartmentState(ApartmentState.STA);
