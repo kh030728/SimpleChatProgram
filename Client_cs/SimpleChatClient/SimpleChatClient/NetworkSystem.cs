@@ -49,6 +49,14 @@ namespace SimpleChatClient
         {
             int port = 6000;
             _nickName = nickName;
+            if(tcpc != null)
+            {
+                if(tcpc.Connected ==true)
+                {
+                    Console.WriteLine("already Connedted");
+                    return 0;
+                }
+            }
             Console.WriteLine("NetworkSystem::Connect(string ipAddr,string nickName) Start ...");
             Console.Write("Generating Socket... ");
             try
@@ -148,6 +156,11 @@ namespace SimpleChatClient
             return 0;
         }
         // 방 생성을 요청하는 메소드
+        /// <summary>
+        /// 방 생성을 요청하는 메소드, 성공하면 0을 실패하면 -1을 반환한다.
+        /// </summary>
+        /// <param name="RNa"></param>
+        /// <returns></returns>
         public int RequestCreate(string RNa)
         {
             byte[] buff = new byte[1024];
@@ -166,8 +179,17 @@ namespace SimpleChatClient
                     Console.Write("Message Read ...");
                     stream.Read(inbuf, 0, inbuf.Length);
                     Console.WriteLine("OK");
-                    inMsg = System.Text.Encoding.Default.GetString(inbuf);
+                    inMsg = System.Text.Encoding.Default.GetString(inbuf).Trim(new char[] { '\0', '\n', '\r' });
                     Console.WriteLine("The Received Message : {0}", inMsg);
+                    if(inMsg == "SUCCESS_CREATE_ROOM")
+                    {
+                        // 성공시 내역.
+                    }
+                    else
+                    {
+                        Console.WriteLine("CREATION FAILED...");
+                        return -1;
+                    }
                 }
                 catch(Exception e)
                 {

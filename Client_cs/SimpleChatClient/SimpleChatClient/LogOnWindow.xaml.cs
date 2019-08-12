@@ -13,7 +13,6 @@ namespace SimpleChatClient
     public partial class LogOnWindow : Window
     {
         NetworkSystem ns = null;
-        bool buttonExecuteFlag = false;
         private delegate void InvokeDelegate();
         public LogOnWindow()
         {
@@ -21,61 +20,44 @@ namespace SimpleChatClient
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (buttonExecuteFlag == false)
+            btn_access.IsEnabled = false;
+            if (tb_IPAddr.Text == "")
             {
-                buttonExecuteFlag = true;
-
-                if (tb_IPAddr.Text == "")
-                {
-                    ControlStatusMsg("IP주소를 입력하여 주세요.", Colors.Red, true);
-                    buttonExecuteFlag = false;
-                    return;
-                }
-                if (tb_NickName.Text == "")
-                {
-                    ControlStatusMsg("닉네임을 입력하여 주세요.", Colors.Red, true);
-                    buttonExecuteFlag = false;
-                    return;
-                }
-
-                ns = NetworkSystem.Instance;
-                string IPAddr = tb_IPAddr.Text;
-                string NickName = tb_NickName.Text;
-                ControlStatusMsg("연결중...", Colors.RoyalBlue, true);
-                Thread thread = new Thread( //네트워크 연결을 다루는 스레드
-                    () =>
-                    {
-                        if (ns.Connect(IPAddr, NickName) < 0) // 실패한경우
-                        {
-                            LOW_tB_statusMsg.Dispatcher.Invoke(() => { ControlStatusMsg("연결 실패", Colors.Red, true); });
-                            buttonExecuteFlag = false;
-                            return;
-                        }   //성공한경우
-                        LOW_tB_statusMsg.Dispatcher.Invoke(() => { ControlStatusMsg("연결 성공", Colors.RoyalBlue, true); });
-                        List<Room> rooms = new List<Room>();
-                        ns.RequestRoom(rooms);
-                        Console.WriteLine("방정보 받아오기 성공");
-                        Thread thread2 = new Thread
-                        (
-                            () =>
-                            {
-                                Console.WriteLine("thread2 Start (RoomListWindow show)");
-                                RoomListWindow roomListWindow = new RoomListWindow(rooms);
-                                roomListWindow.Closed += (sender2, e2) => roomListWindow.Dispatcher.InvokeShutdown();
-                                roomListWindow.Show();
-                                System.Windows.Threading.Dispatcher.Run();
-                            }
-                        );
-                        thread2.SetApartmentState(ApartmentState.STA);
-                        thread2.Start();
-                        Thread.Sleep(100);
-                        this.Dispatcher.BeginInvokeShutdown(System.Windows.Threading.DispatcherPriority.Normal);
-                        buttonExecuteFlag = false;
-
-                    });
-                thread.Start();
-
+                ControlStatusMsg("IP주소를 입력하여 주세요.", Colors.Red, true);
+                btn_access.IsEnabled = true;
+                return;
             }
+            if (tb_NickName.Text == "")
+            {
+                ControlStatusMsg("닉네임을 입력하여 주세요.", Colors.Red, true);
+                btn_access.IsEnabled = true;
+                return;
+            }
+            if (tb_NickName.Text.Contains(" "))
+            {
+                ControlStatusMsg("닉네임에 공백을 포함할 수 없습니다.", Colors.Red, true);
+                btn_access.IsEnabled = true;
+                return;
+            }
+            ns = NetworkSystem.Instance;
+            if(ns.Connect(tb_IPAddr.Text, tb_NickName.Text) < 0)
+            {
+                ControlStatusMsg("연결에 실패하였습니다.", Colors.Red, true);
+                btn_access.IsEnabled = true;
+                return;
+            }
+            List<Room> rooms = new List<Room>();
+            if(ns.RequestRoom(rooms) < 0 )
+            {
+                ControlStatusMsg("연결에 실패하였습니다.", Colors.Red, true);
+                btn_access.IsEnabled = true;
+                return;
+            }
+
+            RoomListWindow roomListWindow = new RoomListWindow(rooms);
+            roomListWindow.Show();
+            this.Close();
+
         }
         private void ChangeSuccess() { ControlStatusMsg("연결 성공", Colors.RoyalBlue, true); }
         private void ChangeFail() { ControlStatusMsg("연결 실패", Colors.Red, true); }
@@ -93,5 +75,6 @@ namespace SimpleChatClient
             LOW_tB_statusMsg.Text = "";
             LOW_tB_statusMsg.Visibility = Visibility.Hidden;
         }
+        
     }
 }
