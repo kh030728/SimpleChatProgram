@@ -17,6 +17,9 @@ public class UserThread extends Thread {
 	public void run() {
 		RoomInfo roomInfo = new RoomInfo();
 		UserInfo userInfo = new UserInfo();
+		roomInfo.addRoom("1번 방인데수웅");
+		roomInfo.addRoom("2번 방인거시야");
+		roomInfo.addRoom("3번 방이지로옹");
 		
 		try {
 			BufferedReader Breader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -29,10 +32,7 @@ public class UserThread extends Thread {
 				System.out.println(str); //입력 확인용
 				
 				//클라이언트 종료
-				if(str.equals("bye")) break;
-				
-				//Pwriter.println(str); //bye가 아니면 메세지 전송
-				//Pwriter.flush(); //버퍼내의 데이타 밀어내기
+				//if(str.equals("bye")) break;
 				
 				//방정보 전송(형식 : "RNo방번호RNa방이름RPN인원수")
 				if(str.equals("REQUEST_ROOMINFO")) {
@@ -41,29 +41,57 @@ public class UserThread extends Thread {
 						System.out.println("방정보 if 내부의 for 시작");
 						Pwriter.println("RNo"+(i+1)+"RNa"+roomInfo.nameRoom(i)+"RPN"+roomInfo.peopleNumber(i)+"\r\n");
 						Pwriter.flush();
-						Thread.sleep(10);;
+						Thread.sleep(10);
 						System.out.println("방정보 if 내부의 for 끝");
 					}
 					Pwriter.println("COMEND");
 					Pwriter.flush();
 					System.out.println("방정보 if 끝");
+					str = null;
 				}
+				
 				//유저 닉네임 저장
-				else if(str.equals("NICKNAME_")) {
+				else if(str.contains("NICKNAME_")) {
 					System.out.println("유저닉네임저장 if 시작");
-					str = str.substring(10, str.length());
+					str = str.substring(9, str.length());
+					System.out.println(str);
 					userInfo.addUser(str);
 					System.out.println("유저닉네임저장 if 끝");
+					str = null;
 				}
 				
 				//방 생성
-				else if(str.equals("")) {
+				else if(str.contains("REQUEST_CREATE_ROOM_")) {
 					System.out.println("방생성 if 시작");
-					//str = str.substring(10, str.length()); // 입력 값에서 방 제목
+					str = str.substring(20, str.length()); // 입력 값에서 방 제목
 					roomInfo.addRoom(str);
-					int i = roomInfo.searchRoom(str);
-					roomInfo.joinRoom(i);
+					System.out.println(str);
+					int roomNu = roomInfo.searchRoom(str);
+					System.out.println(i);
+					Pwriter.println("SUCCESS_CREATE_ROOM");
+					Pwriter.flush();
+					//참여자 목록 보내기
+					for(int j = 0;j < userInfo.userList.size();j++) {
+						if(userInfo.userJoinRoomNu.get(j) == roomNu) {
+							Pwriter.println(userInfo.userList.get(j));
+							Pwriter.flush();
+							System.out.println(userInfo.userList.get(j));
+							Thread.sleep(10);
+						}
+					}
+					Pwriter.println("COMEND");
+					Pwriter.flush();
+					System.out.println("방생성 if 끝");
+					str = null;
 				}
+				
+				//채팅 전송
+				else if(str.contains("%CHAT%&;_%$")) {
+					String[] chatStr = str.split("&;_%$");
+					int userNu = userInfo.searchUser(chatStr[1]);
+					Pwriter.println("RNu" + userInfo.userJoinRoomNu.get(userNu) + "UNa" + chatStr[1] + "Chat" + chatStr[2]);
+				}
+				System.out.println("while 끝");
 			}
 		} catch(Exception e) {
 			System.out.println("userthread : "+e.getMessage());

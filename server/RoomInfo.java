@@ -12,13 +12,7 @@ public class RoomInfo {
 
 	public void addRoom(String str) {
 		roomName.add(str);
-	}
-
-	public void joinRoom(int i) {
-		if (roomPeople.get(i) == null) {
-			roomPeople.set(i, 0);
-		}
-		else roomPeople.set(i, roomPeople.get(i) + 1);
+		roomPeople.add(1);
 	}
 
 	public int sizeRoom() {

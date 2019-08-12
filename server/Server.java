@@ -18,10 +18,8 @@ public class Server {
 		try {
 			serverSocket = new ServerSocket(6000); // port번호 6000로 서버소켓 생성
 			socket = serverSocket.accept(); // 소켓생성 메소드 accept();
-			Thread th1 = new SenderThread(socket);
-			Thread th2 = new ReceiverThread(socket);
-			//th1.start();
-			th2.start();
+			Thread th1 = new UserThread(socket);
+			th1.start();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally { // 서버 종료시 소켓을 해제
