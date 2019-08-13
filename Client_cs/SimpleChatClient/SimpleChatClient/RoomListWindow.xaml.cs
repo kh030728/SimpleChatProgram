@@ -22,6 +22,11 @@ namespace SimpleChatClient
             RoomListView.ItemsSource = rooms;
             TB_NickName.Text = ns.NICKNAME;
         }
+        public RoomListWindow()
+        {
+            InitializeComponent();
+        }
+
 
 
         private void Btn_exit_Click(object sender, RoutedEventArgs e)
@@ -55,19 +60,19 @@ namespace SimpleChatClient
 
         private void Btn_createRoom_Click(object sender, RoutedEventArgs e)
         {
-            btn_refresh.IsEnabled = false;
-            btn_createRoom.IsEnabled = false;
-            Console.WriteLine("Click create button");
-            Task refreshTask = new Task(() =>
+            CreateRoomDialog createRoomDialog = new CreateRoomDialog();
+            if(createRoomDialog.ShowDialog() == true)
             {
-                if(ns.RequestCreate("이름") < 0)
-                {
-
-                }
-                btn_refresh.IsEnabled = true;
-                btn_createRoom.IsEnabled = true;
-            });
-            refreshTask.Start();
+                Console.WriteLine("True");
+                Console.WriteLine("Room Name : {0}",CreateRoomDialog.ReturnValue);
+                ns.RequestCreate(CreateRoomDialog.ReturnValue);
+            }
+            else
+            {
+                Console.WriteLine("false");
+            }
+            
         }
+        
     }
 }
