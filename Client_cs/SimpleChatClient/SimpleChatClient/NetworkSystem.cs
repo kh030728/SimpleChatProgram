@@ -183,7 +183,8 @@ namespace SimpleChatClient
                     Console.WriteLine("The Received Message : {0}", inMsg);
                     if(inMsg == "SUCCESS_CREATE_ROOM")
                     {
-                        // 성공시 내역.
+                        Console.WriteLine("Creation Success!");
+                        return 0;
                     }
                     else
                     {
@@ -202,7 +203,6 @@ namespace SimpleChatClient
                 Console.Write("This Connection has been lost.");
                 return -1;
             }
-            return 0;
         }
         // 방에 접속을 요청하는 메소드
         public void RequestJoin()
@@ -210,14 +210,23 @@ namespace SimpleChatClient
 
         }
         // 메시지를 전송하는 메소드
-        public void SendMsg()
+        public void SendMsg(string msg)
         {
-
+            Console.Write("Send Message...");
+            byte[] buff = new byte[1024];
+            buff = System.Text.Encoding.Default.GetBytes("%CHAT%&;_%$"+_nickName+"&;_%$"+msg+"\r\n");
+            stream.Write(buff,0,buff.Length);
+            Console.WriteLine("OK");
         }
         // 메시지를 수신받는 메소드
-        public void RecvMsg()
-        {
-
+        public String RecvMsg()
+        {             
+            byte[] buff = new byte[1024];
+            stream.Read(buff,0,buff.Length);
+            //RNu방번호UNa유저닉네임Chat채팅내용
+            String Msg = System.Text.Encoding.Default.GetString(buff).Trim(new char[] { '\0', '\n', '\r' });
+            Console.WriteLine("Receive Message : {0}", Msg);
+            return Msg;
         }
         ~NetworkSystem()
         {

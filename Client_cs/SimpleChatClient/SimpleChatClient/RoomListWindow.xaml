@@ -14,7 +14,10 @@
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <ListView Margin="10 10 10 10" Name ="RoomListView" Grid.Column="0">
+            <ListView Margin="10 10 10 10" 
+                      Name ="RoomListView"
+                      Grid.Column="0"
+                      >
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="번호" Width ="40" DisplayMemberBinding="{Binding ID}"/>

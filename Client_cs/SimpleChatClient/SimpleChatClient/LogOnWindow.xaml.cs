@@ -75,6 +75,11 @@ namespace SimpleChatClient
             LOW_tB_statusMsg.Text = "";
             LOW_tB_statusMsg.Visibility = Visibility.Hidden;
         }
-        
+        private void Button_Click1(object sender, RoutedEventArgs e)
+        {
+            ChatWindow chatWindow = new ChatWindow();
+            chatWindow.Show();
+            this.Close();
+        }
     }
 }

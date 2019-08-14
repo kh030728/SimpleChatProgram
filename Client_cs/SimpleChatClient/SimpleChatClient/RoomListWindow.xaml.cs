@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 
 namespace SimpleChatClient
@@ -65,7 +66,20 @@ namespace SimpleChatClient
             {
                 Console.WriteLine("True");
                 Console.WriteLine("Room Name : {0}",CreateRoomDialog.ReturnValue);
-                ns.RequestCreate(CreateRoomDialog.ReturnValue);
+                if(ns.RequestCreate(CreateRoomDialog.ReturnValue) == 0)
+                {
+                    // 성공한 경우
+                    Thread.Sleep(50);
+                    Console.Write("방 생성 완료 목록 갱신...");
+                    ns.RequestRoom(rooms);
+                    RoomListView.Items.Refresh();
+                    Console.WriteLine("완료");
+                }
+                else
+                {
+                    // 실패한 경우
+                    MessageBox.Show("방을 생성하는데 실패하였습니다.","생성 실패",MessageBoxButton.OK,MessageBoxImage.Error);
+                }
             }
             else
             {

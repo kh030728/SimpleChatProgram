@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="SimpleChatClient.chatitem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SimpleChatClient"
+             mc:Ignorable="d">
+
+    <Border
+            Background="Aqua"
+        CornerRadius="15"
+        Padding="10 5 10 5"
+        Margin="10 10 10 15"
+            >
+        <StackPanel>
+            <TextBlock Name ="nameTextBlock" Text="Test" FontSize="12" TextWrapping="Wrap"/>
+            <TextBlock Name ="messageTextBlock" Text="Tesat" FontSize="18" TextWrapping="Wrap"/>
+        </StackPanel>
+    </Border>
+</UserControl>
