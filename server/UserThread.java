@@ -39,10 +39,9 @@ public class UserThread extends Thread {
 					System.out.println("방정보 if 시작");
 					for (int i = 0; i < roomInfo.sizeRoom(); i++) {
 						System.out.println("방정보 if 내부의 for 시작");
-						Pwriter.println("RNo" + (i + 1) + "RNa" + roomInfo.nameRoom(i) + "RPN"
-								+ roomInfo.peopleNumber(i) + "\r\n");
+						Pwriter.println("RNo" + (i + 1) + "RNa" + roomInfo.nameRoom(i) + "RPN" + roomInfo.peopleNumber(i) + "\r\n");
 						Pwriter.flush();
-						Thread.sleep(10);
+						Thread.sleep(20);
 						System.out.println("방정보 if 내부의 for 끝");
 					}
 					Pwriter.println("COMEND");
@@ -76,7 +75,8 @@ public class UserThread extends Thread {
 					 * for(int j = 0;j < userInfo.userList.size();j++) {
 					 * if(userInfo.userJoinRoomNu.get(j) == roomNu) {
 					 * Pwriter.println(userInfo.userList.get(j)); Pwriter.flush();
-					 * System.out.println(userInfo.userList.get(j)); Thread.sleep(10); } }
+					 * System.out.println(userInfo.userList.get(j));
+					 * Thread.sleep(20); } }
 					 */
 					Pwriter.println("COMEND");
 					Pwriter.flush();
