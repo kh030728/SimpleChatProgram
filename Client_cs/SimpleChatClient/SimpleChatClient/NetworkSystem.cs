@@ -118,6 +118,7 @@ namespace SimpleChatClient
                 return -1;
             }
             Thread.Sleep(10);
+            input.Clear();
             // recv 구현부
             while(true)
             {

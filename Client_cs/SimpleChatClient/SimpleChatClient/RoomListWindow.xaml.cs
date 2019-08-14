@@ -11,6 +11,7 @@ namespace SimpleChatClient
     /// <summary>
     /// RoomListWindow.xaml에 대한 상호 작용 논리
     /// </summary>
+    /// 
     public partial class RoomListWindow : Window
     {
         private List<Room> rooms;
@@ -53,8 +54,8 @@ namespace SimpleChatClient
                     rooms = tmp;
                     RoomListView.Items.Refresh();
                 }
-                btn_refresh.IsEnabled = true;
-                btn_createRoom.IsEnabled = true;
+                btn_refresh.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
+                    new Action(delegate() { btn_refresh.IsEnabled = true; btn_createRoom.IsEnabled = true; }) );
             });
             refreshTask.Start();
         }
