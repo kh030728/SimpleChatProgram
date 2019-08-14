@@ -45,8 +45,6 @@ namespace SimpleChatClient
                 List<Room> tmp = new List<Room>();
                 if(ns.RequestRoom(tmp) < 0)
                 { // 실패한경우
-                    btn_refresh.IsEnabled = true;
-                    btn_createRoom.IsEnabled = true;
                     return;
                 }
                 else
@@ -54,10 +52,11 @@ namespace SimpleChatClient
                     rooms = tmp;
                     RoomListView.Items.Refresh();
                 }
-                btn_refresh.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
-                    new Action(delegate() { btn_refresh.IsEnabled = true; btn_createRoom.IsEnabled = true; }) );
             });
             refreshTask.Start();
+            refreshTask.Wait();
+            btn_refresh.IsEnabled = true;
+            btn_createRoom.IsEnabled = true;
         }
 
         private void Btn_createRoom_Click(object sender, RoutedEventArgs e)
