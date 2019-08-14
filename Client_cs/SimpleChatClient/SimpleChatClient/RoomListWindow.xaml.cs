@@ -40,21 +40,18 @@ namespace SimpleChatClient
             btn_refresh.IsEnabled = false;
             btn_createRoom.IsEnabled = false;
             Console.WriteLine("Click refresh button");
-            Task refreshTask = new Task(() =>
+            List<Room> tmp = new List<Room>();
+            if (ns.RequestRoom(tmp) < 0)
+            { // 실패한경우
+                Console.WriteLine("Failed");
+                return;
+            }
+            else
             {
-                List<Room> tmp = new List<Room>();
-                if(ns.RequestRoom(tmp) < 0)
-                { // 실패한경우
-                    return;
-                }
-                else
-                {
-                    rooms = tmp;
-                    RoomListView.Items.Refresh();
-                }
-            });
-            refreshTask.Start();
-            refreshTask.Wait();
+                rooms = tmp;
+                RoomListView.Items.Refresh();
+            }
+            Console.WriteLine("OK");
             btn_refresh.IsEnabled = true;
             btn_createRoom.IsEnabled = true;
         }
