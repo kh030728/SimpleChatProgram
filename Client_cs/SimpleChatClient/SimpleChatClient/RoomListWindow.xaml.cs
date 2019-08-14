@@ -40,15 +40,14 @@ namespace SimpleChatClient
             btn_refresh.IsEnabled = false;
             btn_createRoom.IsEnabled = false;
             Console.WriteLine("Click refresh button");
-            List<Room> tmp = new List<Room>();
-            if (ns.RequestRoom(tmp) < 0)
+            if (ns.RequestRoom(rooms) < 0)
             { // 실패한경우
+                RoomListView.Items.Refresh();
                 Console.WriteLine("Failed");
                 return;
             }
             else
             {
-                rooms = tmp;
                 RoomListView.Items.Refresh();
             }
             Console.WriteLine("OK");
