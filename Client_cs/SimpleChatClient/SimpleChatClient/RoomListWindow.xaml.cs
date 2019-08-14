@@ -29,8 +29,6 @@ namespace SimpleChatClient
             InitializeComponent();
         }
 
-
-
         private void Btn_exit_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
@@ -42,14 +40,13 @@ namespace SimpleChatClient
             Console.WriteLine("Click refresh button");
             if (ns.RequestRoom(rooms) < 0)
             { // 실패한경우
+                RoomListView.ItemsSource = rooms;
                 RoomListView.Items.Refresh();
                 Console.WriteLine("Failed");
                 return;
             }
-            else
-            {
-                RoomListView.Items.Refresh();
-            }
+            RoomListView.ItemsSource = rooms;
+            RoomListView.Items.Refresh();
             Console.WriteLine("OK");
             btn_refresh.IsEnabled = true;
             btn_createRoom.IsEnabled = true;
@@ -68,6 +65,7 @@ namespace SimpleChatClient
                     Thread.Sleep(50);
                     Console.Write("방 생성 완료 목록 갱신...");
                     ns.RequestRoom(rooms);
+                    RoomListView.ItemsSource = rooms;
                     RoomListView.Items.Refresh();
                     Console.WriteLine("완료");
                 }
