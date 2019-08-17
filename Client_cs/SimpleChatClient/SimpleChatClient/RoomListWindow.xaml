@@ -47,10 +47,16 @@
                     Margin="10 20 10 10"
                     Height="30"
                     Click="Btn_createRoom_Click"/>
+                <Button 
+                    Name="btn_joinRoom"
+                    Content="접속하기"
+                    Margin="10 20 10 10"
+                    Height="30"
+                    Click="Btn_joinRoom_Click"/>
                 <Button
                     Name="btn_exit"
                     Content="종료"
-                    Margin="10 190 10 10"
+                    Margin="10 130 10 10"
                     Height="30"
                     Click="Btn_exit_Click"/>
             </StackPanel>

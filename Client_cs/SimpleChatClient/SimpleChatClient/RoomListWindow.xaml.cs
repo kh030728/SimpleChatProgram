@@ -16,17 +16,22 @@ namespace SimpleChatClient
     {
         private List<Room> rooms;
         private NetworkSystem ns;
-        public RoomListWindow(List<Room> input)
-        {
-            rooms = input;
-            ns = NetworkSystem.Instance;
-            InitializeComponent();
-            RoomListView.ItemsSource = rooms;
-            TB_NickName.Text = ns.NICKNAME;
-        }
+
         public RoomListWindow()
         {
-            InitializeComponent();
+            ns = NetworkSystem.Instance;
+            rooms = new List<Room>();
+            if(ns.RequestRoom(rooms) < 0) // 실패시
+            {
+                MessageBox.Show("방목록을 불러오는데 실패 하였습니다.\n새로 고침을 이용하여 주세요.", "연결 오류", MessageBoxButton.OK, MessageBoxImage.Error);
+                InitializeComponent();
+            }
+            else
+            {  //성공시
+                InitializeComponent();
+                RoomListView.ItemsSource = rooms;
+            }
+            TB_NickName.Text = ns.NICKNAME;
         }
 
         private void Btn_exit_Click(object sender, RoutedEventArgs e)
@@ -51,7 +56,6 @@ namespace SimpleChatClient
             btn_refresh.IsEnabled = true;
             btn_createRoom.IsEnabled = true;
         }
-
         private void Btn_createRoom_Click(object sender, RoutedEventArgs e)
         {
             CreateRoomDialog createRoomDialog = new CreateRoomDialog();
@@ -81,6 +85,19 @@ namespace SimpleChatClient
             }
             
         }
-        
+        private void Btn_joinRoom_Click(object sender, RoutedEventArgs e)
+        {
+            Room room = (Room)RoomListView.SelectedItem;
+            if (room == null)
+                Console.WriteLine("No Select");
+            else
+            {
+                Console.WriteLine("the room number of Selected item : ", room.ID);
+                if(ns.RequestJoin(room.ID) < 0 )
+                { // 실패의 경우
+                    MessageBox.Show("해당 방에 접속하는 것이 실패하였습니다.", "접속 실패", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
     }
 }

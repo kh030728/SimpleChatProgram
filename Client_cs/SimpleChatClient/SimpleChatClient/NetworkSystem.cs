@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
@@ -13,6 +9,7 @@ namespace SimpleChatClient
     // 싱글톤 패턴으로 단하나의 객체를 갖는다.
     public class NetworkSystem
     {
+        #region NetworkSystem members
         private static NetworkSystem instance = null;
         private NetworkStream stream;
         private static TcpClient tcpc = null;
@@ -35,16 +32,11 @@ namespace SimpleChatClient
                 return instance;
             }
         }
+        #endregion
         // 네트워크 연결을 수행하는 메소드
+        #region NetworkSystem Methods
 
-        /// <summary>
-        /// STA가 아닌 다른 스레드에서 수행하세요.
-        /// 연결이 된다면 해당 스레드 에서 RequestRoom또한 실행하세요.
-        /// 연결에 성공한다면 0을 실패한다면 -1을 반환합니다.
-        /// </summary>
-        /// <param name="ipAddr"></param>
-        /// <param name="nickName"></param>
-        /// <returns></returns>
+        #region NetworkSystem Methods on LogOnWindow
         public int Connect(string ipAddr, string nickName)
         {
             int port = 6000;
@@ -91,8 +83,11 @@ namespace SimpleChatClient
             Console.WriteLine("OK");
             return 0;
         }
+        #endregion
+
+        #region NetworkSystem Methods on RoomListWindow
         /// <summary>
-        /// 채팅방에 대한 정보를 서버에 요청하여 받아오는 메소드입니다.
+        /// 채팅방에 대한 정보를 서버에 요청하여 받아오는 메소드입니다. 성공시 0, 실패시 -1을 반환한다
         /// </summary>
         /// <param name="input"></param>
         public int RequestRoom(List<Room> input)
@@ -156,7 +151,6 @@ namespace SimpleChatClient
 
             return 0;
         }
-        // 방 생성을 요청하는 메소드
         /// <summary>
         /// 방 생성을 요청하는 메소드, 성공하면 0을 실패하면 -1을 반환한다.
         /// </summary>
@@ -164,10 +158,12 @@ namespace SimpleChatClient
         /// <returns></returns>
         public int RequestCreate(string RNa)
         {
+            // 1. 사용할 변수들 초기화
             byte[] buff = new byte[1024];
             string msg = "REQUEST_CREATE_ROOM_"+RNa+"\r\n";
             string inMsg = string.Empty;
             buff = System.Text.Encoding.Default.GetBytes(msg);
+            // 2. tcp 연결 확인 후, 메시지 전송 및 응답대기
             Console.WriteLine("RequestCreate method start!");
             if (tcpc.Connected)
             {
@@ -180,6 +176,7 @@ namespace SimpleChatClient
                     Console.Write("Message Read ...");
                     stream.Read(inbuf, 0, inbuf.Length);
                     Console.WriteLine("OK");
+                    // 3. 수신한 메시지를 확인한 후에 결과 반환
                     inMsg = System.Text.Encoding.Default.GetString(inbuf).Trim(new char[] { '\0', '\n', '\r' });
                     Console.WriteLine("The Received Message : {0}", inMsg);
                     if(inMsg == "SUCCESS_CREATE_ROOM")
@@ -205,11 +202,41 @@ namespace SimpleChatClient
                 return -1;
             }
         }
-        // 방에 접속을 요청하는 메소드
-        public void RequestJoin()
+        /// <summary>
+        /// 채팅 방에 접속하는 메소드. 성공시 0 실패시 -1을 반환한다.
+        /// </summary>
+        /// <returns></returns>
+        public int RequestJoin(int RoomNumber)
         {
+            #region 사용할 변수 초기화
+            byte[] buff = new byte[1024];
+            string Msg = "JOIN_" + NICKNAME + "_" + RoomNumber.ToString() + "\r\n";
+            #endregion
+            
+            #region 네트워크 통신
+            Console.WriteLine("Message : {0}", Msg);
+            Console.Write("Send ... ");
+            try
+            {
+                stream.Write(buff, 0, buff.Length);
+                Console.WriteLine("OK");
+                /*
+                 * 방에대한 정보를 받아오는 자리
+                 */
+            }
+            catch
+            {
+                Console.WriteLine("Failed");
+                return -1;
+            }
+            #endregion
 
+            return 0;
         }
+
+        #endregion
+
+        #region NetworkSystem Method on ChatWindow
         // 메시지를 전송하는 메소드
         public void SendMsg(string msg)
         {
@@ -236,7 +263,9 @@ namespace SimpleChatClient
             if (stream != null)
                 stream.Close();
         }
+        #endregion
 
+        #endregion
     }
-    
+
 }
