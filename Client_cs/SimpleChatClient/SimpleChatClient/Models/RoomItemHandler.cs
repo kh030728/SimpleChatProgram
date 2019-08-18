@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace SimpleChatClient.Models
 {
+    using System.Collections.ObjectModel;
+
     public class RoomItemHandler : ObservableCollection<Room>
     {
         /// <summary>
@@ -14,6 +10,7 @@ namespace SimpleChatClient.Models
         /// </summary>
         public RoomItemHandler()
         {
+
         }
     }
 
@@ -32,16 +29,16 @@ namespace SimpleChatClient.Models
         /// <summary>
         /// Gets or Sets the Room's Name;
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get => _Name; set => _Name = value; }
         private int _Number;
         /// <summary>
         /// Gets or Sets the Room's Number;
         /// </summary>
-        public int Number{ get; set; }
+        public int Number{ get => _Number; set => _Number = value; }
         private int _NumberOfPeople;
         /// <summary>
         /// Gets or Sets the Room's NumberOfPeople;
         /// </summary>
-        public int NumberOfPeople { get; set; }
+        public int NumberOfPeople { get => _NumberOfPeople; set => _NumberOfPeople = value; }
     }
 }

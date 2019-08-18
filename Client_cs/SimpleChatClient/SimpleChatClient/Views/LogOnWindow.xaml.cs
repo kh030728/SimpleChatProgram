@@ -1,11 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Media;
-namespace SimpleChatClient
+namespace SimpleChatClient.Views
 {
-    using SimpleChatClient.Views;
-    /// <summary>
-    /// MainWindow.xaml에 대한 상호 작용 논리
-    /// </summary>
+    using SimpleChatClient.ViewModels;
     public partial class LogOnWindow : Window
     {
         NetworkSystem ns = null;
@@ -13,6 +10,7 @@ namespace SimpleChatClient
         public LogOnWindow()
         {
             InitializeComponent();
+            DataContext = new LogOnWindowViewModel();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -57,12 +55,6 @@ namespace SimpleChatClient
             roomListWindow.Show();
             this.Close();
 
-        }
-        private void Button_Click1(object sender, RoutedEventArgs e)
-        {
-            ChatWindow chatWindow = new ChatWindow();
-            chatWindow.Show();
-            this.Close();
         }
         private void ControlStatusMsg(string msg, Color color, bool visible)
         {

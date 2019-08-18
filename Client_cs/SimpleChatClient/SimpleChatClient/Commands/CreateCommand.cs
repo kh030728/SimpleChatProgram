@@ -16,7 +16,7 @@
             _ViewModel = viewModel;
         }
 
-        private RoomListWindowViewModel _ViewModel;
+        public RoomListWindowViewModel _ViewModel;
 
         #region ICommand member
 

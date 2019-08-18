@@ -15,9 +15,6 @@ namespace SimpleChatClient.Views
     /// </summary>
     public partial class RoomListWindow : Window
     {
-        private List<Room> rooms;
-        private NetworkSystem ns;
-
         /// <summary>
         /// Initializes a new Instance of the RoomListWindow class;
         /// </summary>

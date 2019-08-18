@@ -1,10 +1,10 @@
 ﻿namespace SimpleChatClient.ViewModels
 {
+    using System.Collections.ObjectModel;
     using System.Windows.Input;
     using System;
     
     using SimpleChatClient.Models;
-    using System.Collections.ObjectModel;
 
     internal class RoomListWindowViewModel
     {

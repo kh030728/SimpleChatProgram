@@ -1,8 +1,8 @@
 ﻿<Application x:Class="SimpleChatClient.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:SimpleChatClient"
-             StartupUri="LogOnWindow.xaml">
+             xmlns:local="clr-namespace:SimpleChatClient.Views"
+             StartupUri="Views/LogOnWindow.xaml">
     <Application.Resources>
          
     </Application.Resources>
