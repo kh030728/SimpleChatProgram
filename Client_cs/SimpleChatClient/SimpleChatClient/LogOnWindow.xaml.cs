@@ -2,6 +2,7 @@
 using System.Windows.Media;
 namespace SimpleChatClient
 {
+    using SimpleChatClient.Views;
     /// <summary>
     /// MainWindow.xaml에 대한 상호 작용 논리
     /// </summary>

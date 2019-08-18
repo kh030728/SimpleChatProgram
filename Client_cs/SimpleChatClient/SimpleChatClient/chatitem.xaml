@@ -6,15 +6,12 @@
              xmlns:local="clr-namespace:SimpleChatClient"
              mc:Ignorable="d">
 
-    <Border
-            Background="Aqua"
-        CornerRadius="15"
-        Padding="10 5 10 5"
-        Margin="10 10 10 15"
-            >
-        <StackPanel>
-            <TextBlock Name ="nameTextBlock" Text="Test" FontSize="12" TextWrapping="Wrap"/>
-            <TextBlock Name ="messageTextBlock" Text="Tesat" FontSize="18" TextWrapping="Wrap"/>
-        </StackPanel>
-    </Border>
+    <StackPanel>
+        <Border Background="GhostWhite" CornerRadius="15 0 0 0">
+            <TextBlock Margin="10 5 10 0" Name ="nameTextBlock" Text="Test" FontSize="12" TextWrapping="Wrap"/>
+        </Border>
+        <Border Background="#FF01E8FF" CornerRadius="0 0 15 0">
+            <TextBlock Margin="10 0 10 5" Name ="messageTextBlock" Text="Tesat" FontSize="18" TextWrapping="Wrap"/>
+        </Border>
+    </StackPanel>
 </UserControl>

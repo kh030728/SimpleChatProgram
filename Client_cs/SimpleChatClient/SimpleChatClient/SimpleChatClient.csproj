@@ -64,11 +64,16 @@
     <Compile Include="ChatWindow.xaml.cs">
       <DependentUpon>ChatWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Commands\CreateCommand.cs" />
+    <Compile Include="Commands\JoinCommand.cs" />
+    <Compile Include="Commands\RefreshCommand.cs" />
     <Compile Include="CreateRoomDialog.xaml.cs">
       <DependentUpon>CreateRoomDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\RoomItemHandler.cs" />
     <Compile Include="NetworkSystem.cs" />
-    <Compile Include="RoomListWindow.xaml.cs">
+    <Compile Include="ViewModels\RoomListWindowViewModel.cs" />
+    <Compile Include="Views\RoomListWindow.xaml.cs">
       <DependentUpon>RoomListWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="chatitem.xaml">
@@ -91,12 +96,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Room.cs" />
     <Compile Include="LogOnWindow.xaml.cs">
       <DependentUpon>LogOnWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="RoomListWindow.xaml">
+    <Page Include="Views\RoomListWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
