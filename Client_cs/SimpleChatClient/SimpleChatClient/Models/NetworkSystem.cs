@@ -7,7 +7,9 @@ namespace SimpleChatClient
     using SimpleChatClient.Models;
     using System.Collections.ObjectModel;
 
-    // 싱글톤 패턴으로 단하나의 객체를 갖는다.
+    /// <summary>
+    /// This class create only one instance.
+    /// </summary>
     public class NetworkSystem
     {
         #region NetworkSystem members
@@ -65,7 +67,7 @@ namespace SimpleChatClient
             try
             {
                 byte[] buff = new byte[1024];
-                buff = System.Text.Encoding.UTF8.GetBytes("NICKNAME_"+NickName + "\r\n");
+                buff = System.Text.Encoding.ASCII.GetBytes("NICKNAME_"+NickName + "\r\n");
                 Stream.Write(buff, 0, buff.Length);
                 Thread.Sleep(10);
             }
@@ -125,7 +127,7 @@ namespace SimpleChatClient
         {
             Console.Write("Send Message...");
             byte[] buff = new byte[1024];
-            buff = System.Text.Encoding.UTF8.GetBytes("%CHAT%&;_%$"+NickName+"&;_%$"+msg+"\r\n");
+            buff = System.Text.Encoding.ASCII.GetBytes("%CHAT%&;_%$"+NickName+"&;_%$"+msg+"\r\n");
             Stream.Write(buff,0,buff.Length);
             Console.WriteLine("OK");
         }
@@ -135,7 +137,7 @@ namespace SimpleChatClient
             byte[] buff = new byte[1024];
             Stream.Read(buff,0,buff.Length);
             //RNu방번호UNa유저닉네임Chat채팅내용
-            String Msg = System.Text.Encoding.UTF8.GetString(buff).Trim(new char[] { '\0', '\n', '\r' });
+            String Msg = System.Text.Encoding.ASCII.GetString(buff).Trim(new char[] { '\0', '\n', '\r' });
             Console.WriteLine("Receive Message : {0}", Msg);
             return Msg;
         }
