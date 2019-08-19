@@ -59,7 +59,7 @@
             NetworkSystem networkSystem = NetworkSystem.Instance;
             _roomItemHandler.Clear();
             byte[] buf = new byte[1024];
-            buf = System.Text.Encoding.ASCII.GetBytes("REQUEST_ROOMINFO\r\n");
+            buf = System.Text.Encoding.UTF8.GetBytes("REQUEST_ROOMINFO\r\n");
             #endregion
             #region Checks Network Connection Status
             if (networkSystem.tcpc.Connected == false)
@@ -107,7 +107,7 @@
                 if (recvByteCount > 0)
                 {
                     string inMsg = String.Empty;
-                    inMsg = System.Text.Encoding.ASCII.GetString(buf).Trim(new char[] { '\0', '\n', '\r' });
+                    inMsg = System.Text.Encoding.UTF8.GetString(buf).Trim(new char[] { '\0', '\n', '\r' });
                     Console.WriteLine("Message : {0}",inMsg);
                     if (inMsg == "COMEND")
                         break;
@@ -148,7 +148,7 @@
             try
             {
                 byte[] buf = new byte[1024];
-                buf = System.Text.Encoding.ASCII.GetBytes("REQUEST_CREATE_ROOM_" + roomName + "\r\n");
+                buf = System.Text.Encoding.UTF8.GetBytes("REQUEST_CREATE_ROOM_" + roomName + "\r\n");
                 networkSystem.Stream.Write(buf, 0, buf.Length);
             }
             catch
@@ -162,7 +162,7 @@
             try
             {
                 networkSystem.Stream.Read(buff, 0, buff.Length);
-                Msg = System.Text.Encoding.ASCII.GetString(buff).Trim(new char[] { '\0', '\n', '\r' });
+                Msg = System.Text.Encoding.UTF8.GetString(buff).Trim(new char[] { '\0', '\n', '\r' });
                 Console.WriteLine("The received Message : {0}", Msg);
             }
             catch

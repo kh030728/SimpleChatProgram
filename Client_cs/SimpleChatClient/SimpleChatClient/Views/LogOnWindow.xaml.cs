@@ -3,6 +3,8 @@ using System.Windows.Media;
 namespace SimpleChatClient.Views
 {
     using SimpleChatClient.ViewModels;
+    using System;
+
     public partial class LogOnWindow : Window
     {
         NetworkSystem ns = null;
