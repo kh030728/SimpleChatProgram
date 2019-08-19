@@ -62,10 +62,11 @@ public class UserThread extends Thread {
 				// 방정보 전송(형식 : "RNo방번호RNa방이름RPN인원수")
 				if (str.equals("REQUEST_ROOMINFO")) {
 					System.out.println("방정보 if 시작");
+					String receiveRoomInfo = null;
 					for (int i = 0; i < roomInstance.roomAll(); i++) {
 						System.out.println("방정보 if 내부의 for 시작 ");
-						Pwriter.println("RNo" + (i + 1) + "RNa" + roomInstance.getRoomInfo(i).roomNa + "RPN"
-								+ roomInstance.getRoomInfo(i).entryList.size() + "\r\n");
+						receiveRoomInfo = "RNo" + (i + 1) + "RNa" + roomInstance.getRoomInfo(i).roomNa + "RPN" + roomInstance.getRoomInfo(i).entryList.size() + "\r\n";
+						Pwriter.println(receiveRoomInfo.getBytes("utf-8"));
 						System.out.println("RNo" + (i + 1) + "RNa" + roomInstance.getRoomInfo(i).roomNa + "RPN"
 								+ roomInstance.getRoomInfo(i).entryList.size() + "\r\n");
 						Pwriter.flush();
