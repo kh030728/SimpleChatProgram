@@ -1,28 +1,41 @@
 package chattingProgram;
 
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-//¼­¹ö´Â ServerSocketÀ» °¡Áü
-//ServerSocketÀÌ SocketÀ» »ı¼º
+//ì„œë²„ëŠ” ServerSocketì„ ê°€ì§
+//ServerSocketì´ Socketì„ ìƒì„±
 public class Server {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		// ¼ÒÄÏ »ı¼º
+		// ì†Œì¼“ ìƒì„±
 		ServerSocket serverSocket = null;
 		Socket socket = null;
-		RoomInfo roomInfo = new RoomInfo();
 
 		try {
-			serverSocket = new ServerSocket(6000); // port¹øÈ£ 6000·Î ¼­¹ö¼ÒÄÏ »ı¼º
-			socket = serverSocket.accept(); // ¼ÒÄÏ»ı¼º ¸Ş¼Òµå accept();
-			Thread th1 = new UserThread(socket);
-			th1.start();
+			serverSocket = new ServerSocket(6000); // portë²ˆí˜¸ 6000ë¡œ ì„œë²„ì†Œì¼“ ìƒì„±
+			UsersInfo users = UsersInfo.getInstance();
+			RoomsInfo rooms = RoomsInfo.getInstance();
+			
+			while (true) {
+				socket = serverSocket.accept(); // ì†Œì¼“ìƒì„± ë©”ì†Œë“œ accept();
+				InetAddress inetAddress = socket.getInetAddress(); //ì ‘ì†ì IP
+				String ip = inetAddress.getHostAddress();
+				Thread th = new UserThread(socket, ip);
+				th.start();
+				if (serverSocket != null) {
+					try {
+						serverSocket.close();
+					} catch (Exception e) {
+					}
+				}
+			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-		} finally { // ¼­¹ö Á¾·á½Ã ¼ÒÄÏÀ» ÇØÁ¦
+		} finally { // ì„œë²„ ì¢…ë£Œì‹œ ì†Œì¼“ì„ í•´ì œ
 			if (serverSocket != null) {
 				try {
 					serverSocket.close();
