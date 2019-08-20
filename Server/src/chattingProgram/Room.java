@@ -28,6 +28,7 @@ public class Room {
 			if(entryList.get(i) == entryUser) {
 				entryList.remove(i);
 			}
+			break;
 		}
 	}
 	

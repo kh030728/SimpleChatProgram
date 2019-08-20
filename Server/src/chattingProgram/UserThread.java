@@ -36,7 +36,7 @@ public class UserThread extends Thread {
 			System.out.println("닉네임 수신 " + nickStr);
 
 			// 유저 닉네임 저장
-			if (nickStr.contains("NICKNAME_")) {
+			if (nickStr.contains("NICKNAME%$%")) {
 				System.out.println("유저닉네임저장 if 시작");
 				nickStr = nickStr.substring(9, nickStr.length());
 				System.out.println(nickStr);
@@ -65,8 +65,8 @@ public class UserThread extends Thread {
 					System.out.println("방정보 if 시작");
 					for (int i = 0; i < roomInstance.getRoomAll(); i++) {
 						System.out.println("방정보 if 내부의 for 시작 ");
-						Pwriter.println("RNo" + (i + 1) + "RNa" + roomInstance.getRoomInfo(i).roomNa + "RPN"	+ roomInstance.getRoomInfo(i).entryList.size() + "\r\n");
-						System.out.println("RNo" + (i + 1) + "RNa" + roomInstance.getRoomInfo(i).roomNa + "RPN"	+ roomInstance.getRoomInfo(i).entryList.size() + "\r\n");
+						Pwriter.println("ROOM%$%" + (i + 1) + "%$%" + roomInstance.getRoomInfo(i).roomNa + "%$%" + roomInstance.getRoomInfo(i).entryList.size() + "\r\n");
+						System.out.println("ROOM%$%" + (i + 1) + "%$%" + roomInstance.getRoomInfo(i).roomNa + "%$%" + roomInstance.getRoomInfo(i).entryList.size() + "\r\n");
 						Pwriter.flush();
 						Thread.sleep(20);
 						System.out.println("방정보 if 내부의 for 끝");
@@ -78,66 +78,77 @@ public class UserThread extends Thread {
 				}
 
 				// 방 생성
-				else if (str.contains("REQUEST_CREATE_ROOM_")) {
+				else if (str.contains("REQUEST_CREATE_ROOM%$%")) {
 					System.out.println("방생성 if 시작");
-					str = str.substring(20, str.length()); // 입력 값에서 방 제목
 					System.out.println(str);
-					Room room = new Room(str, nickStr);
+					String[] createRoomStr = str.split("%$%"); // [0] : 요청 메세지, [1] : 방 제목, [2] : 요청 유저
+					System.out.println(createRoomStr[0] + " " + createRoomStr[1] + " " + createRoomStr[2]);
+					Room room = new Room(createRoomStr[1], createRoomStr[2]);
 					roomInstance.addRoom(room);
 					Pwriter.println("SUCCESS_CREATE_ROOM");
 					Pwriter.flush();
 					System.out.println("방생성 if 끝");
+					createRoomStr = null;
 					str = null;
+					
+					for (int i = 0; i < roomInstance.getRoomAll(); i++) { // 방 생성 후 갱신된 방 정보 재 전송
+						Pwriter.println("ROOM%$%" + (i + 1) + "%$%" + roomInstance.getRoomInfo(i).roomNa + "%$%" + roomInstance.getRoomInfo(i).entryList.size() + "\r\n");
+						Pwriter.flush();
+						Thread.sleep(20);
+					}
+					Pwriter.println("COMEND");
+					Pwriter.flush();
 				}
 				
 				// 방 참여
-				else if(str.contains("REQUEST_JOIN_ROOM_")) {
+				else if(str.contains("REQUEST_JOIN_ROOM%$%")) {
 					System.out.println("방 참여 if 시작");
-					str = str.substring(19, str.length());
-					//참여할 방의 (번호 or 제목)과 유저 닉네임 받아오고 스플릿 이용해서 각각 구분하기
-					int roomNu = Integer.parseInt("");
-					String userNick = "";
-					roomInstance.getRoomInfo(roomNu).setAddEntry(userNick); // 방 정보에 참여 유저 넣기
-					for(int i = 0; i < userInstance.getSizeInfo(); i++) { // 유저 정보에 참여한 방 넣기
-						if(userInstance.getUserInfo(i).nickName == userNick) {
-							userInstance.getUserInfo(i).joinRoomNo = roomNu;
-						}
-					}
+					String[] joinRoomStr = str.split("%$%"); // [0] : 요청 메세지, [1] : 참여할 유저, [2] : 참여할 방 번호
+					roomInstance.getRoomInfo(Integer.parseInt(joinRoomStr[2])).setAddEntry(joinRoomStr[1]); // 방 정보에 참여 유저 넣기
 					// 참여자 목록 보내기
-					for(int i = 0; i < roomInstance.getRoomInfo(roomNu).entryList.size(); i++) {
-						Pwriter.println(roomInstance.getRoomInfo(roomNu).entryList.get(i));
+					for(int i = 0; i < roomInstance.getRoomInfo(Integer.parseInt(joinRoomStr[2])).entryList.size(); i++) {
+						Pwriter.println(roomInstance.getRoomInfo(Integer.parseInt(joinRoomStr[2])).entryList.get(i));
 						Pwriter.flush();
-						System.out.println("참여자 1 : " + roomInstance.getRoomInfo(roomNu).entryList.get(i));
+						System.out.println("참여자 1 : " + roomInstance.getRoomInfo(Integer.parseInt(joinRoomStr[2])).entryList.get(i));
 						Thread.sleep(20);
 					}
+					//참여한 방에 참여자 정보 전달
+					ArrayList<String> joinUsers = roomInstance.getRoomInfo(Integer.parseInt(joinRoomStr[2])).entryList; // 참여한 방의 유저 리스트
+					for(int i = 0; i < joinUsers.size(); i++) {	// 채팅 전송
+						PrintWriter sendChat = new PrintWriter(userInstance.getUserSocket(joinUsers.get(i)).getOutputStream());
+						sendChat.println(joinRoomStr[1] + "님이 참여하셨습니다.");
+						sendChat.flush();
+					}
+					joinRoomStr = null;
 					str = null;
 				}
 				
 				// 방 나가기
-				else if(str.contains("REQUEST_OUT_ROOM_")) {
+				else if(str.contains("REQUEST_OUT_ROOM%$%")) {
 					System.out.println("방 나가기 if 시작");
-					str = str.substring(18, str.length());
 					System.out.println(str);
-					roomInstance.removeRoom(Integer.parseInt(str));
+					String[] outRoomStr = str.split("%$%"); // [0] : 요청 메세지, [1] : 나간 유저, [2]: 나간 방 번호
+					roomInstance.getRoomInfo(Integer.parseInt(outRoomStr[2])).setRemoveEntry(outRoomStr[1]); // 해당 방의 유저 목록에서 나간 유저 삭제
+					//나간 유저 정보 전달
+					ArrayList<String> joinUsers = roomInstance.getRoomInfo(Integer.parseInt(outRoomStr[2])).entryList; // 참여한 방의 유저 리스트
+					for(int i = 0; i < joinUsers.size(); i++) {	// 채팅 전송
+						PrintWriter sendChat = new PrintWriter(userInstance.getUserSocket(joinUsers.get(i)).getOutputStream());
+						sendChat.println(outRoomStr[1] + "님이 퇴장하셨습니다.");
+						sendChat.flush();
+					}
+					outRoomStr = null;
 					str = null;
 				}
 
 				// 채팅 전송
-				else if (str.contains("%CHAT%&;_%$")) {
-					String[] chatStr = str.split("&;_%$");
-					int roomNu = 0;
-					for(int i = 0; i < userInstance.getSizeInfo(); i++) {
-						if(userInstance.getUserInfo(i).nickName == chatStr[1]) { // 방 번호 구하기
-							roomNu = userInstance.getUserInfo(i).joinRoomNo;
-						}
-						break;
-					}
-					for(int i = 0; i < userInstance.getSizeInfo(); i++) { // 채팅 보내기
-						if(userInstance.getUserInfo(i).joinRoomNo == roomNu) {
-							PrintWriter sendChat = new PrintWriter(userInstance.getUserInfo(i).getSocket().getOutputStream());
-							sendChat.println(chatStr[2]);
-							sendChat.flush();
-						}
+				else if (str.contains("SEND_CHAT%$%")) {
+					System.out.println(str);
+					String[] chatStr = str.split("%$%"); // [0] : 요청 메세지, [1] : 유저 닉네임, [2] : 방 번호, [3] : 채팅 내용
+					ArrayList<String> joinUsers = roomInstance.getRoomInfo(Integer.parseInt(chatStr[2])).entryList; // 참여한 방의 유저 리스트
+					for(int i = 0; i < joinUsers.size(); i++) {	// 채팅 전송
+						PrintWriter sendChat = new PrintWriter(userInstance.getUserSocket(joinUsers.get(i)).getOutputStream());
+						sendChat.println(chatStr[3]);
+						sendChat.flush();
 					}
 				}
 				
