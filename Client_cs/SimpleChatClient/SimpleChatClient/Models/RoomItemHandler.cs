@@ -1,7 +1,9 @@
-﻿
-namespace SimpleChatClient.Models
+﻿namespace SimpleChatClient.Models
 {
     using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
+    using System.Windows.Threading;
+    using System;
 
     public class RoomItemHandler : ObservableCollection<Room>
     {
@@ -10,7 +12,59 @@ namespace SimpleChatClient.Models
         /// </summary>
         public RoomItemHandler()
         {
+            
+        }
+        public override event NotifyCollectionChangedEventHandler CollectionChanged;
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
+            NotifyCollectionChangedEventHandler CollectionChanged = this.CollectionChanged;
+            if(CollectionChanged != null)
+            {
+                foreach(NotifyCollectionChangedEventHandler nh in CollectionChanged.GetInvocationList())
+                {
+                    DispatcherObject dispObj = nh.Target as DispatcherObject;
+                    if(dispObj != null)
+                    {
+                        Dispatcher dispatcher = dispObj.Dispatcher;
+                        if(dispatcher != null)
+                        {
+                            dispatcher.BeginInvoke(
+                            (Action)(() => nh.Invoke(this,
+                                new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset))),
+                            DispatcherPriority.DataBind);
+                        }
+                    }
+                }
+            }
+        }
 
+        public void Add(string number, string name, string people)
+        {
+            this.Add(new Room(name, int.Parse(number), int.Parse(people)));
+        }
+        public bool RemoveRoom(int roomIndex)
+        {
+            foreach(Room elem in this)
+            {
+                if(elem.Number == roomIndex)
+                {
+                    Remove(elem);
+                    return true;
+                }
+            }
+            return false;
+        }
+        public bool ChangeRoom(int roomIndex, int roomPeople)
+        {
+            foreach (Room elem in this)
+            {
+                if (elem.Number == roomIndex)
+                {
+                    elem.NumberOfPeople = roomPeople;
+                    return true;
+                }
+            }
+            return false;
         }
     }
 
@@ -25,6 +79,7 @@ namespace SimpleChatClient.Models
             Number = number;
             NumberOfPeople = numberOfPeople;
         }
+
         private string _Name;
         /// <summary>
         /// Gets or Sets the Room's Name;
