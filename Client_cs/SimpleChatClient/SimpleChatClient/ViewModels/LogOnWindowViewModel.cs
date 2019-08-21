@@ -58,7 +58,7 @@
             try
             {
                 byte[] buff = new byte[1024];
-                buff = System.Text.Encoding.UTF8.GetBytes("NickName_" + TextData.NickName);
+                buff = System.Text.Encoding.UTF8.GetBytes("NICKNAME%$%" + TextData.NickName+"\r\n");
                 networkSystem.Stream.Write(buff, 0, buff.Length);
             }
             catch

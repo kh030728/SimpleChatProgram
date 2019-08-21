@@ -68,7 +68,7 @@
     <Compile Include="Commands\CreateCommand.cs" />
     <Compile Include="Commands\JoinCommand.cs" />
     <Compile Include="Commands\RefreshCommand.cs" />
-    <Compile Include="CreateRoomDialog.xaml.cs">
+    <Compile Include="Views\CreateRoomDialog.xaml.cs">
       <DependentUpon>CreateRoomDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\RoomItemHandler.cs" />
@@ -87,7 +87,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="CreateRoomDialog.xaml">
+    <Page Include="Views\CreateRoomDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

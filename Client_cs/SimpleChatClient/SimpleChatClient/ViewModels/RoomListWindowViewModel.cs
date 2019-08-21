@@ -117,13 +117,23 @@
                     string inMsg = String.Empty;
                     inMsg = System.Text.Encoding.UTF8.GetString(buf).Trim(new char[] { '\0', '\n', '\r' });
                     Console.WriteLine("Message : {0}",inMsg);
-                    if (inMsg == "COMEND")
+                    if (inMsg == "SEND_FINISH")
+                    {
+                        Console.WriteLine("Finish Message");
                         break;
-                    string[] seperator = { "RNo", "RNa", "RPN" };
-                    string[] array = inMsg.Split(seperator, StringSplitOptions.RemoveEmptyEntries);
-                    if (array.Length != 3)
-                        break;
-                    _roomItemHandler.Add(new Room(array[1], int.Parse(array[0]), int.Parse(array[2])));
+                    }
+                    if(inMsg.Contains("ROOM%$%"))
+                    {
+                        string[] array = inMsg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
+                        if (array.Length != 4)
+                            break;
+                        _roomItemHandler.Add(new Room(array[2], int.Parse(array[1]), int.Parse(array[3])));
+                    }
+                    else
+                    {
+                        Console.WriteLine("잘못된 메시지 {0}", inMsg);
+                    }
+
                 }
                 else
                 {
@@ -157,7 +167,7 @@
             try
             {
                 byte[] buf = new byte[1024];
-                buf = System.Text.Encoding.UTF8.GetBytes("REQUEST_CREATE_ROOM_" + roomName + "\r\n");
+                buf = System.Text.Encoding.UTF8.GetBytes("REQUEST_CREATE_ROOM%$%" + roomName + "%$%" + NickName +"\r\n");
                 networkSystem.Stream.Write(buf, 0, buf.Length);
             }
             catch

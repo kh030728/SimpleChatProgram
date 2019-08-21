@@ -33,16 +33,16 @@
 
         public void Execute(object parameter)
         {
-            CreateRoomDialog createRoomDialog = new CreateRoomDialog();
+            Views.CreateRoomDialog createRoomDialog = new Views.CreateRoomDialog();
             if (createRoomDialog.ShowDialog() == true)
             {
-                if (CreateRoomDialog.ReturnValue.Contains("_"))
+                if (Views.CreateRoomDialog.ReturnValue.Contains("%$%"))
                 {
-                    MessageBox.Show("'_' 문자를 포함할 수 없습니다.", "오류", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("\"%$%\" 문자열을 포함할 수 없습니다.", "오류", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                Console.WriteLine("Room Name : {0}", CreateRoomDialog.ReturnValue);
-                _ViewModel.CreateRoom(CreateRoomDialog.ReturnValue);
+                Console.WriteLine("Room Name : {0}", Views.CreateRoomDialog.ReturnValue);
+                _ViewModel.CreateRoom(Views.CreateRoomDialog.ReturnValue);
             }
         }
 
