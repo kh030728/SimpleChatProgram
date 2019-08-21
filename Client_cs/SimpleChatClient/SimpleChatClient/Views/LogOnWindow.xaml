@@ -5,89 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SimpleChatClient.Views"
         mc:Ignorable="d"
-        Title="로그인" Height="200" Width="450"
-        ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="Sign In" Height="600" Width="400"
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        Background="#FF1E1E2C" >
 
     <Grid>
-        <!--최상위 그리드-->
         <Grid.RowDefinitions>
-            <RowDefinition Height="8*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <!-- 주소부, 별칭부, 버튼까지 포함하는 그리드-->
-        <Grid
-                Grid.Row="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
-            </Grid.RowDefinitions>
-            <!-- 입력부와 버튼 구분하는 그리드-->
-            <!-- 입력부 - 주소부-->
-            <Grid
-                    Margin="0 0 10 0"
-                        Grid.Row="0"
-                        VerticalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="2*"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock 
-                            Text="접속할 IP 주소"
-                            TextAlignment="Center"
-                            Grid.Column="0"/>
-                <TextBox Name="tb_IPAddr"
-                         Text="127.0.0.1"
-                            Grid.Column="1"
-                             Height="20"
-                            FocusManager.GotFocus="Tb_IPAddr_GotFocus"/>
-            </Grid>
-            <!-- 입력부 - 별칭부-->
-            <Grid
-                    Margin="0 0 10 0"
-                        Grid.Row="1"
-                        VerticalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="2*"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock 
-                            Text="닉 네 임"
-                            TextAlignment="Center"
-                            Grid.Column="0"/>
-                <TextBox 
-                    Name="tb_NickName"
-                    Grid.Column="1"
-                    Height="20"
-                    FocusManager.GotFocus="Tb_IPAddr_GotFocus"
-                    MaxLength="8"
-                    />
-            </Grid>
-            <Button
-                Name ="btn_access"
-                    Margin="10"
-                    Grid.Row="2"
-                    Grid.Column="1"
-                    Content="접속"
-                    Click="Button_Click"
-                    Foreground="WhiteSmoke">
-                    <Button.Background>
-                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
-                    </Button.Background>
-                </Button>
-            
+        <TextBlock Foreground="White" VerticalAlignment="Center" TextAlignment="Center" Text="Simple Chat Program" FontSize="30"/>
+        <TextBlock Foreground="White" Text="NickName" Grid.Row="1" Width="90" FontSize="16" FontFamily="Microsoft JhengHei UI" Margin="67,58,237,136" VerticalAlignment="Center"/>
+        <TextBox  Name="NickName_TextBox" Text ="{Binding TextData.NickName, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1"  Foreground="White" Background="Transparent"  BorderBrush="#FF44447C" FontFamily="Microsoft JhengHei UI" MaxLines="1" Margin="162,58,67,136" FontSize="16" MaxLength="10" TextAlignment="Justify" BorderThickness="0,0,0,1"/>
+        
 
-        </Grid>
+        <TextBlock Foreground="White" Text="IP Address" Grid.Row="1" FontSize="16" Width="90" FontFamily="Microsoft JhengHei UI" Margin="67,135,237,59" VerticalAlignment="Center"/>
 
-        <TextBlock 
-            Name="LOW_tB_statusMsg"
-            Grid.Row="1"
-            Background="Red"
-            Visibility="Hidden"
-            TextAlignment="Center"
-            Foreground="WhiteSmoke"
-                />
+        <TextBox Name="Address_TextBox" Grid.Row="1" Text="{Binding TextData.Address, UpdateSourceTrigger=PropertyChanged}" Foreground="White" Background="Transparent" BorderBrush="#FF44447C" FontFamily="Microsoft JhengHei UI" MaxLines="1" Margin="162,135,67,59" FontSize="16" MaxLength="15" TextAlignment="Justify" BorderThickness="0,0,0,1"/>
+
+        <Button Name="btn_access" Content="Sign In" Grid.Row="2" Padding="2" FontWeight="Bold" Margin="67,32,67,42"  Background="#FF31315B" Foreground="White" Command="{Binding ConnectCommand}"/>
+        <TextBlock Name="LOW_tB_statusMsg" Background="Blue" Margin="0,458,0,93" />
     </Grid>
-
 
 </Window>

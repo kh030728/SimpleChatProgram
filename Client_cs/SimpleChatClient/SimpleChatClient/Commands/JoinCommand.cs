@@ -28,7 +28,7 @@
 
         public void Execute(object parameter)
         {
-            
+            _ViewModel.JoinRoom();
         }
         #endregion
     }

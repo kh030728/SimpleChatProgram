@@ -44,15 +44,13 @@
                 <TextBox
                     Name="tbx_chatInput"
                     Margin="5"
-                    Grid.Column="0"
-                    KeyDown="Tbx_chatInput_EnterKeyDown"/>
+                    Grid.Column="0"/>
                 <Button
                     Content="전송"
                     Margin="5"
                     Grid.Column="1"
                     Foreground="WhiteSmoke"
-                    Name="sendButton"
-                    Click="SendButton_Click">
+                    Name="sendButton">
                     <Button.Background>
                         <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
                     </Button.Background>

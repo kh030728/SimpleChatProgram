@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
-using System.Windows;
-
+﻿
 namespace SimpleChatClient.Views
 {
+    using System.Windows;
+
     using SimpleChatClient.Models;
     using SimpleChatClient.ViewModels;
     /// <summary>
@@ -18,10 +13,11 @@ namespace SimpleChatClient.Views
         /// <summary>
         /// Initializes a new Instance of the RoomListWindow class;
         /// </summary>
-        public RoomListWindow()
+        public RoomListWindow(string NickName)
         {
             InitializeComponent();
-            DataContext = new RoomListWindowViewModel();
+            RoomListWindowViewModel vm = new RoomListWindowViewModel(NickName);
+            DataContext = vm;
         }
 
         private void Btn_exit_Click(object sender, RoutedEventArgs e)

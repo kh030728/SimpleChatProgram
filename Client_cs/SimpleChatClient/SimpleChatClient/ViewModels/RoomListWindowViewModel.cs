@@ -13,13 +13,16 @@
         /// <summary>
         /// Initializes a new instance of the RoomListWinodwViewModel class;
         /// </summary>
-        public RoomListWindowViewModel()
+        public RoomListWindowViewModel(string nickName)
         {
+            NickName = nickName;
+            Console.WriteLine("RoomListWindowViewModel 생성");
             _roomItemHandler = new RoomItemHandler();
             RefreshCommand = new SimpleChatClient.Commands.RefreshCommand(this);
             CreateCommand = new SimpleChatClient.Commands.CreateCommand(this);
             JoinCommand = new SimpleChatClient.Commands.JoinCommand(this);
             DownloadRoomData();
+            Console.WriteLine("RoomListWindowViewModel 생성 완료");
         }
         /// <summary>
         /// Gets or set the RoomListWindowViewModel's RefreshCommand
@@ -33,6 +36,8 @@
         /// Gets or set the RoomListWindowViewModel's JoinCommand
         /// </summary>
         public ICommand JoinCommand { get; private set; }
+
+        public string NickName { get; set; }
 
         #region Methods for the RefreshCommand class
         /// <summary>
@@ -65,11 +70,13 @@
             if (networkSystem.tcpc.Connected == false)
             {
                 Console.WriteLine("Socket closed. you can't send a message.");
+                Console.WriteLine("-------------------------------------------------");
                 return;
             }
             if (networkSystem.Stream == null)
             {
                 Console.WriteLine("NetworkStream is null. ");
+                Console.WriteLine("-------------------------------------------------");
                 return;
             }
             #endregion
@@ -82,10 +89,10 @@
             catch (Exception e)
             {
                 Console.WriteLine("Send Failed\n{0}", e);
+                Console.WriteLine("-------------------------------------------------");
                 return;
             }
             Console.WriteLine("Send Success");
-            Console.WriteLine("=================================================");
             #endregion
             #region Downloads data of Room;
             Console.WriteLine("Downloading data of Room ... ");
@@ -102,6 +109,7 @@
                 catch (Exception e)
                 {
                     Console.WriteLine("Receive Failed\n{0}", e);
+                    Console.WriteLine("-------------------------------------------------");
                     return;
                 }
                 if (recvByteCount > 0)
@@ -121,6 +129,7 @@
                 {
                     break;
                 }
+                Console.WriteLine("-------------------------------------------------");
             }
             Console.WriteLine("OK");
             #endregion
@@ -182,11 +191,28 @@
             }
             DownloadRoomData();
             #endregion
-            Console.WriteLine("=================================================");
+            Console.WriteLine("-------------------------------------------------");
         }
         #endregion
         #region Methods for the JoinCommand class
+        public void JoinRoom()
+        {
 
+            Console.WriteLine("=================================================");
+            Console.WriteLine("Start RoomListWindowViewModel::JoinRoom(void)");
+            if (SelectedRoom == null)
+            {
+                Console.WriteLine("Selected Item is null");
+                return;
+            }
+            NetworkSystem ns = NetworkSystem.Instance;
+            byte[] buff = new byte[1024];
+            Console.WriteLine("JOIN_" + ns.NickName + "_" + SelectedRoom.Number);
+            buff = System.Text.Encoding.UTF8.GetBytes("JOIN_"+ns.NickName+"_"+SelectedRoom.Number);
+            ns.Stream.Write(buff, 0, buff.Length);
+            Console.WriteLine("-------------------------------------------------");
+        }
+        public Room SelectedRoom { get; set; }
         #endregion
     }
 }

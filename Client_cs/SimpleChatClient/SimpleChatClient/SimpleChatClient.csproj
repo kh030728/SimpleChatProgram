@@ -71,9 +71,9 @@
     <Compile Include="CreateRoomDialog.xaml.cs">
       <DependentUpon>CreateRoomDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\LogOnInfo.cs" />
     <Compile Include="Models\RoomItemHandler.cs" />
     <Compile Include="Models\NetworkSystem.cs" />
+    <Compile Include="Models\MyInfo.cs" />
     <Compile Include="ViewModels\LogOnWindowViewModel.cs" />
     <Compile Include="ViewModels\RoomListWindowViewModel.cs" />
     <Compile Include="Views\RoomListWindow.xaml.cs">

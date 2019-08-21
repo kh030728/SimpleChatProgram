@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:SimpleChatClient.Views"
         mc:Ignorable="d"
         Title="방 목록" Height="450" Width="600"
-        ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        Background="#FFBDBDFB">
     <Border
         Padding="15">
         <Grid>
@@ -17,7 +18,10 @@
             <ListView Margin="10 10 10 10" 
                       Name ="RoomListView"
                       Grid.Column="0"
-                      ItemsSource="{Binding Items}">
+                      ItemsSource="{Binding Items}"
+                      SelectedItem="{Binding SelectedRoom}"
+                      Background="#FFEBEBF3"
+                      >
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="번호" Width ="40" DisplayMemberBinding="{Binding Number}"/>
@@ -31,34 +35,35 @@
                 Orientation="Vertical">
 
                 <TextBlock 
-                    Text="닉네임"
+                    Text="{Binding NickName}"
                     FontSize="15"
                     Margin="11"
-                    Name="TB_NickName"/>
+                    Name="TB_NickName"
+                    Foreground="White"/>
                 <Button
                     Name="btn_refresh"
                     Content="새로고침"
                     Command="{Binding RefreshCommand }"
                     Margin="10 10 10 10"
                     Height="30"
-                    Foreground="WhiteSmoke"
-                    Background="#FF0078D7"/>
+                    Foreground="White"
+                    Background="#FFA5A5F1"/>
                 <Button 
                     Name="btn_createRoom"
                     Content="방만들기"
                     Margin="10 20 10 10"
                     Height="30"
                     Command="{Binding CreateCommand }"
-                    Foreground="WhiteSmoke"
-                    Background="#FF0078D7"/>
+                    Foreground="White"
+                    Background="#FFA5A5F1"/>
                 <Button 
                     Name="btn_joinRoom"
                     Content="접속하기"
                     Margin="10 20 10 10"
                     Height="30"
                     Command="{Binding JoinCommand }"
-                    Foreground="WhiteSmoke"
-                    Background="#FF0078D7"
+                    Foreground="White"
+                    Background="#FFA5A5F1"
                     />
                 <Button
                     Name="btn_exit"
@@ -66,8 +71,8 @@
                     Margin="10 130 10 10"
                     Height="30"
                     Click="Btn_exit_Click"
-                    Foreground="WhiteSmoke"
-                    Background="#FF0078D7"/>
+                    Foreground="White"
+                    Background="#FFA5A5F1"/>
             </StackPanel>
         </Grid>
     </Border>

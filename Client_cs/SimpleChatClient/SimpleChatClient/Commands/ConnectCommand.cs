@@ -23,12 +23,12 @@
 
         public bool CanExecute(object parameter)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public void Execute(object parameter)
         {
-            throw new NotImplementedException();
+            _ViewModel.Connect();
         }
         #endregion
     }
