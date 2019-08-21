@@ -100,7 +100,7 @@ public class UserThread extends Thread {
 								break;
 							}
 						}
-						NotifyAddRoom.println("NOTIFY_ADD_ROOM%$%" + addRoomNu + "%$%" + createRoomStr[1] + "\r\n");
+						NotifyAddRoom.println("NOTIFY_ADD_ROOM%$%" + addRoomNu + "%$%" + createRoomStr[1] + "%$%" + roomInstance.getRoomInfo(addRoomNu).entryList.size() +"\r\n");
 						NotifyAddRoom.flush();
 						System.out.println("갱신된 방 정보 전송 완료");
 					}
@@ -185,7 +185,7 @@ public class UserThread extends Thread {
 					}
 				}
 
-				System.out.println("while 끝");
+				System.out.println("====================================");
 			}
 		} catch (Exception e) {
 			System.out.println("userthread : " + e.getMessage());
