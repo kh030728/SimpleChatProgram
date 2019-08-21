@@ -1,5 +1,6 @@
 package chattingProgram;
 
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class UsersInfo {
 	}
 	
 	public Socket getUserSocket(String userNick) {
-		Socket userSocket = null;;
+		Socket userSocket = null;
 		for(int i = 0; i < userInfo.size(); i++) {
 			if(userInfo.get(i).nickName == userNick) {
 				userSocket = userInfo.get(i).socket;
