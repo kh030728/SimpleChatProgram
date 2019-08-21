@@ -70,8 +70,8 @@ public class UserThread extends Thread {
 					System.out.println("방정보 요청 메세지 수신 완료 / 수신 메세지 : " + str);
 					for (int i = 0; i < roomInstance.getRoomAll(); i++) {
 						System.out.println("방정보 보내는중 " + i + "개 준비중");
-						Pwriter.println("NOTITY_ADD_ROOM%$%" + (i + 1) + "%$%" + roomInstance.getRoomInfo(i).roomNa + "%$%" + roomInstance.getRoomInfo(i).entryList.size() + "\r\n");
-						System.out.println("NORIFY_ADD_ROOM%$%" + (i + 1) + "%$%" + roomInstance.getRoomInfo(i).roomNa + "%$%" + roomInstance.getRoomInfo(i).entryList.size() + "\r\n");
+						Pwriter.println("NOTIFY_ADD_ROOM%$%" + i + "%$%" + roomInstance.getRoomInfo(i).roomNa + "%$%" + roomInstance.getRoomInfo(i).entryList.size() + "\r\n");
+						System.out.println("NORIFY_ADD_ROOM%$%" + i + "%$%" + roomInstance.getRoomInfo(i).roomNa + "%$%" + roomInstance.getRoomInfo(i).entryList.size() + "\r\n");
 						Pwriter.flush();
 						Thread.sleep(50);
 						System.out.println("방정보 보내는중 " + i + "개 완료");
