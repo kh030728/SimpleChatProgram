@@ -41,10 +41,15 @@
                     byte[] readOnlyBuff = new byte[1024];
                     try
                     {
-                        if (ns.Stream.Read(readOnlyBuff, 0, readOnlyBuff.Length) <= 0)
+                        int recvBytes = ns.Stream.Read(readOnlyBuff, 0, readOnlyBuff.Length);
+                        if (recvBytes == 0)
                         {
                             Console.WriteLine("ReadThread :: a Message is empty ");
                             continue;
+                        }
+                        else if (recvBytes < 0)
+                        {
+                            Console.WriteLine("ReadThread :: Socket is close");
                         }
                         Console.WriteLine("ReadThread :: a Message arrived ");
                     }
@@ -61,7 +66,9 @@
                             Console.WriteLine("방번호 : {0} 방이름 {1} 방인원수 {2}", room[1], room[2], room[3]);
                             try
                             {
-                                _roomItemHandler.Add(room[1],room[2],room[3]);
+                                int num = int.Parse(room[1]);
+                                int peo = int.Parse(room[3]);
+                                _roomItemHandler.Add(num,room[2],peo);
                             }catch(Exception e) { Console.WriteLine(e); }
                         }
                         catch

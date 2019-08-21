@@ -42,6 +42,10 @@
         {
             this.Add(new Room(name, int.Parse(number), int.Parse(people)));
         }
+        public void Add(int number, string name, int people)
+        {
+            this.Add(new Room(name, number, people));
+        }
         public bool RemoveRoom(int roomIndex)
         {
             foreach(Room elem in this)

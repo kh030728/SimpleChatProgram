@@ -5,19 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SimpleChatClient.Views"
         mc:Ignorable="d"
-        Title="방 목록" Height="450" Width="600"
+        Title="방 목록" Height="700" Width="400"
         ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
-        Background="#FFBDBDFB">
+        Background="#FF1E1E2C">
     <Border
         Padding="15">
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="6*"/>
+                <RowDefinition Height="3*"/>
+            </Grid.RowDefinitions>
             <ListView Margin="10 10 10 10" 
                       Name ="RoomListView"
-                      Grid.Column="0"
+                      Grid.Row="1"
                       ItemsSource="{Binding Items}"
                       SelectedItem="{Binding SelectedRoom}"
                       Background="#FFEBEBF3"
@@ -25,29 +26,22 @@
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="번호" Width ="40" DisplayMemberBinding="{Binding Number}"/>
-                        <GridViewColumn Header="이름" Width="300" DisplayMemberBinding="{Binding Name}"/>
+                        <GridViewColumn Header="이름" Width="250" DisplayMemberBinding="{Binding Name}"/>
                         <GridViewColumn Header="인원수" Width="50" DisplayMemberBinding="{Binding NumberOfPeople}"/>
                     </GridView>
                 </ListView.View>
             </ListView>
-            <StackPanel 
-                Grid.Column="1"
-                Orientation="Vertical">
-
-                <TextBlock 
+            <TextBlock 
+                Grid.Row="0"
                     Text="{Binding NickName}"
-                    FontSize="15"
+                    FontSize="30"
                     Margin="11"
                     Name="TB_NickName"
                     Foreground="White"/>
-                <Button
-                    Name="btn_refresh"
-                    Content="새로고침"
-                    Command="{Binding RefreshCommand }"
-                    Margin="10 10 10 10"
-                    Height="30"
-                    Foreground="White"
-                    Background="#FFA5A5F1"/>
+            <StackPanel 
+                Grid.Row="2"
+                Orientation="Vertical">
+
                 <Button 
                     Name="btn_createRoom"
                     Content="방만들기"
@@ -55,7 +49,7 @@
                     Height="30"
                     Command="{Binding CreateCommand }"
                     Foreground="White"
-                    Background="#FFA5A5F1"/>
+                    Background="#FF31315B"/>
                 <Button 
                     Name="btn_joinRoom"
                     Content="접속하기"
@@ -63,16 +57,16 @@
                     Height="30"
                     Command="{Binding JoinCommand }"
                     Foreground="White"
-                    Background="#FFA5A5F1"
+                    Background="#FF31315B"
                     />
                 <Button
                     Name="btn_exit"
                     Content="종료"
-                    Margin="10 130 10 10"
+                    Margin="10 20 10 10"
                     Height="30"
                     Click="Btn_exit_Click"
                     Foreground="White"
-                    Background="#FFA5A5F1"/>
+                    Background="#FF31315B"/>
             </StackPanel>
         </Grid>
     </Border>
