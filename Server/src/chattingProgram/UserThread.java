@@ -38,8 +38,7 @@ public class UserThread extends Thread {
 			BufferedReader Breader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			BufferedWriter Bwriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			PrintWriter Pwriter = new PrintWriter(socket.getOutputStream()); // 출력 스트림
-			String nickStr = null;
-			nickStr = new String(nickStr);
+			String nickStr = Breader.readLine();
 			System.out.println("닉네임 수신 " + nickStr);
 
 			// 유저 닉네임 저장
