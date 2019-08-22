@@ -38,7 +38,7 @@
             #region Readthread Define
             Readthread = new Thread(new ParameterizedThreadStart(this.ReadThreadAction));
             #endregion
-            test = Dispatcher.CurrentDispatcher;
+            STAThread = Dispatcher.CurrentDispatcher;
             Readthread.SetApartmentState(ApartmentState.STA);
             Readthread.IsBackground = true;
             Readthread.Start("aa");
@@ -129,8 +129,9 @@
                 {
                     string[] command = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
                     createRoomNumber = int.Parse(command[1]);
-                    STAThread.Invoke(OpenChatWindowAction);
+                    STAThread.Invoke(OpenChatWindowActionWithCreate);
                     STAThread.Invoke(CloseAction);
+                    Console.WriteLine("ReadThread :: end");
                     return;
 
                 }
@@ -139,6 +140,7 @@
                     Console.WriteLine("ReadThread :: Start to join a room");
                     STAThread.Invoke(OpenChatWindowAction);
                     STAThread.Invoke(CloseAction);
+                    Console.WriteLine("ReadThread :: end");
                     return;
                     
                 }
