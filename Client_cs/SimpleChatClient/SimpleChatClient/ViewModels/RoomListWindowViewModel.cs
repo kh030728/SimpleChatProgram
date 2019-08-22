@@ -17,7 +17,7 @@
         private Thread Readthread;
         public string NickName { get; set; }
         public Room SelectedRoom { get; set; }
-        private Dispatcher test;
+        private Dispatcher STAThread;
         public int createRoomNumber { get; set; }
         #endregion
         /// <summary>
@@ -38,7 +38,7 @@
             #region Readthread Define
             Readthread = new Thread(new ParameterizedThreadStart(this.ReadThreadAction));
             #endregion
-            test = Dispatcher.CurrentDispatcher;
+            STAThread = Dispatcher.CurrentDispatcher;
             Readthread.SetApartmentState(ApartmentState.STA);
             Readthread.IsBackground = true;
             Readthread.Start("aa");
@@ -129,19 +129,18 @@
                 {
                     string[] command = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
                     createRoomNumber = int.Parse(command[1]);
-                    test.Invoke(OpenChatWindowAction);
-                    test.Invoke(CloseAction);
+                    STAThread.Invoke(OpenChatWindowActionWithCreate);
+                    STAThread.Invoke(CloseAction);
+                    Console.WriteLine("ReadThread :: end");
                     return;
 
                 }
                 else if (msg.Contains("FINISH_JOIN"))
                 {
                     Console.WriteLine("ReadThread :: Start to join a room");
-                    //Dispatcher.CurrentDispatcher.Invoke(OpenChatWindowAction);
-                    //Dispatcher.CurrentDispatcher.Invoke(CloseAction);
-                    test.Invoke(OpenChatWindowAction);
-                    test.Invoke(CloseAction);
-                    //OpenChatWindowAction();
+                    STAThread.Invoke(OpenChatWindowAction);
+                    STAThread.Invoke(CloseAction);
+                    Console.WriteLine("ReadThread :: end");
                     return;
                     
                 }
@@ -261,6 +260,7 @@
                 Console.WriteLine("-------------------------------------------------");
                 return;
             }
+            Console.WriteLine("-------------------------------------------------");
             #endregion
         }
         #endregion

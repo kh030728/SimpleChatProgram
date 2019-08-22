@@ -28,7 +28,7 @@ namespace SimpleChatClient.ViewModels
                 byte[] buff = new byte[1024];
                 int recvBytes = NetworkSystem.Instance.Stream.Read(buff, 0, buff.Length);
                 string msg = System.Text.Encoding.UTF8.GetString(buff).Trim(new char[] { '\n', '\r', '\0' });
-                Console.WriteLine("ReadThread :: A received message : {0}", msg);
+                Console.WriteLine("ChatWindowViewModel:: ReadThread :: A received message : {0}", msg);
                 if (msg.Contains("USERS%$%"))
                 {
                     string[] userNameArray = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
@@ -41,6 +41,7 @@ namespace SimpleChatClient.ViewModels
         }
         public ChatWindowViewModel()
         {
+            Console.WriteLine("ChatWindowViewModel :: start");
             Thread readThread = new Thread(new ThreadStart(ReadThread));
             readThread.IsBackground = true;
             readThread.Start();
@@ -48,6 +49,7 @@ namespace SimpleChatClient.ViewModels
             byte[] buff = new byte[1024];
             buff = System.Text.Encoding.UTF8.GetBytes("READY_FOR_JOIN\r\n");
             NetworkSystem.Instance.Stream.Write(buff, 0, buff.Length);
+            Console.WriteLine("ChatWindowViewModel :: send Ready for join");
 
 
         }
