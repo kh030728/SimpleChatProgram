@@ -17,6 +17,8 @@
         private Thread Readthread;
         public string NickName { get; set; }
         public Room SelectedRoom { get; set; }
+        private Dispatcher test;
+        public int createRoomNumber { get; set; }
         #endregion
         /// <summary>
         /// Initializes a new instance of the RoomListWinodwViewModel class;
@@ -34,90 +36,126 @@
             JoinCommand = new SimpleChatClient.Commands.JoinCommand(this); // 방 참여 커맨드
             #endregion
             #region Readthread Define
-            Readthread = new Thread( () =>
-            {
-                NetworkSystem ns = NetworkSystem.Instance;
-                while (true)
-                {
-                    byte[] readOnlyBuff = new byte[1024];
-                    try
-                    {
-                        int recvBytes = ns.Stream.Read(readOnlyBuff, 0, readOnlyBuff.Length);
-                        if (recvBytes == 0)
-                        {
-                            Console.WriteLine("ReadThread :: a Message is empty ");
-                            continue;
-                        }
-                        else if (recvBytes < 0)
-                        {
-                            Console.WriteLine("ReadThread :: Socket is close");
-                        }
-                        Console.WriteLine("ReadThread :: a Message arrived ");
-                    }
-                    catch { Console.WriteLine("ReadThread :: An error was occured in running the Read method");
-                    }
-                    string msg = System.Text.Encoding.UTF8.GetString(readOnlyBuff).Trim(new char[] { '\n', '\r', '\0' });
-                    if (msg.Contains("NOTIFY_ADD_ROOM%$%"))
-                    {
-                        string[] room = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
-                        Console.WriteLine("ReadThread :: Notify_Add_Room func");
-                        try
-                        {
-                            Console.WriteLine("메시지확인 {0}", msg);
-                            Console.WriteLine("방번호 : {0} 방이름 {1} 방인원수 {2}", room[1], room[2], room[3]);
-                            try
-                            {
-                                int num = int.Parse(room[1]);
-                                int peo = int.Parse(room[3]);
-                                _roomItemHandler.Add(num,room[2],peo);
-                            }catch(Exception e) { Console.WriteLine(e); }
-                        }
-                        catch
-                        {
-                            Console.WriteLine("ReadThread :: A task to add an item in list was failed.");
-                            continue;
-                        }
-                        Console.WriteLine("ReadThread :: A room was added in a list");
-                    }
-                    else if (msg.Contains("NOTIFY_REMOVE_ROOM%$%"))
-                    {
-                        string[] room = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
-                        try
-                        {
-                            _roomItemHandler.RemoveRoom(int.Parse(room[1]));
-                            Console.WriteLine("ReadThread :: The item was removed in list.");
-                        }
-                        catch
-                        {
-                            Console.WriteLine("ReadThread :: A task to remove an item in list was failed.");
-                            continue;
-                        }
-                    }
-                    else if (msg.Contains("NOTIFY_CHANGE_ROOM%$%"))
-                    {
-                        string [] room = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
-                        try
-                        {
-                            _roomItemHandler.ChangeRoom(int.Parse(room[1]),int.Parse(room[2]));
-                            Console.WriteLine("ReadThread :: The item was removed in list.");
-                        }
-                        catch
-                        {
-                            Console.WriteLine("ReadThread :: A task to revise an item in list was failed.");
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("ReadThread :: This message is invaild : {0}", msg);
-                    }
-                }
-            });
+            Readthread = new Thread(new ParameterizedThreadStart(this.ReadThreadAction));
             #endregion
-            Readthread.Start();
+            test = Dispatcher.CurrentDispatcher;
+            Readthread.SetApartmentState(ApartmentState.STA);
+            Readthread.IsBackground = true;
+            Readthread.Start("aa");
+            
             DownloadRoomData(); // 방목록을 받아옴
             Console.WriteLine("생성자 완료");
         }
+
+        delegate void InvokeDelegate();
+
+        private void ReadThreadAction(object currnetDispatcher)
+        {
+            NetworkSystem ns = NetworkSystem.Instance;
+            while (true)
+            {
+                byte[] readOnlyBuff = new byte[1024];
+                try
+                {
+                    int recvBytes = ns.Stream.Read(readOnlyBuff, 0, readOnlyBuff.Length);
+                    if (recvBytes == 0)
+                    {
+                        Console.WriteLine("ReadThread :: a Message is empty ");
+                        continue;
+                    }
+                    else if (recvBytes < 0)
+                    {
+                        Console.WriteLine("ReadThread :: Socket is close");
+                    }
+                    Console.WriteLine("ReadThread :: a Message arrived ");
+                }
+                catch
+                {
+                    Console.WriteLine("ReadThread :: An error was occured in running the Read method");
+                }
+                string msg = System.Text.Encoding.UTF8.GetString(readOnlyBuff).Trim(new char[] { '\n', '\r', '\0' });
+                if (msg.Contains("NOTIFY_ADD_ROOM%$%"))
+                {
+                    string[] room = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
+                    Console.WriteLine("ReadThread :: Notify_Add_Room func");
+                    try
+                    {
+                        Console.WriteLine("메시지확인 {0}", msg);
+                        Console.WriteLine("방번호 : {0} 방이름 {1} 방인원수 {2}", room[1], room[2], room[3]);
+                        try
+                        {
+                            int num = int.Parse(room[1]);
+                            int peo = int.Parse(room[3]);
+                            _roomItemHandler.Add(num, room[2], peo);
+                        }
+                        catch (Exception e) { Console.WriteLine(e); }
+                    }
+                    catch
+                    {
+                        Console.WriteLine("ReadThread :: A task to add an item in list was failed.");
+                        continue;
+                    }
+                    Console.WriteLine("ReadThread :: A room was added in a list");
+                }
+                else if (msg.Contains("NOTIFY_REMOVE_ROOM%$%"))
+                {
+                    string[] room = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
+                    try
+                    {
+                        _roomItemHandler.RemoveRoom(int.Parse(room[1]));
+                        Console.WriteLine("ReadThread :: The item was removed in list.");
+                    }
+                    catch
+                    {
+                        Console.WriteLine("ReadThread :: A task to remove an item in list was failed.");
+                        continue;
+                    }
+                }
+                else if (msg.Contains("NOTIFY_CHANGE_ROOM%$%"))
+                {
+                    string[] room = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
+                    try
+                    {
+                        _roomItemHandler.ChangeRoom(int.Parse(room[1]), int.Parse(room[2]));
+                        Console.WriteLine("ReadThread :: The item was removed in list.");
+                    }
+                    catch
+                    {
+                        Console.WriteLine("ReadThread :: A task to revise an item in list was failed.");
+                        continue;
+                    }
+                }
+                else if(msg.Contains("SUCCESS_CREATE_ROOM%$%"))
+                {
+                    string[] command = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
+                    createRoomNumber = int.Parse(command[1]);
+                    test.Invoke(OpenChatWindowAction);
+                    test.Invoke(CloseAction);
+                    return;
+
+                }
+                else if (msg.Contains("FINISH_JOIN"))
+                {
+                    Console.WriteLine("ReadThread :: Start to join a room");
+                    //Dispatcher.CurrentDispatcher.Invoke(OpenChatWindowAction);
+                    //Dispatcher.CurrentDispatcher.Invoke(CloseAction);
+                    test.Invoke(OpenChatWindowAction);
+                    test.Invoke(CloseAction);
+                    //OpenChatWindowAction();
+                    return;
+                    
+                }
+                else
+                {
+                    Console.WriteLine("ReadThread :: This message is invaild : {0}", msg);
+                }
+            }
+        }
+
+        public Action OpenChatWindowAction { get; set; }
+        public Action CloseAction { get; set; }
+        public Action OpenChatWindowActionWithCreate { get; set; }
+
         #region Define Commands
         /// <summary>
         /// Gets or set the RoomListWindowViewModel's RefreshCommand
@@ -215,7 +253,7 @@
                 byte[] buf = new byte[1024];
                 buf = System.Text.Encoding.UTF8.GetBytes("REQUEST_CREATE_ROOM%$%" + roomName + "%$%" + NickName + "\r\n");
                 networkSystem.Stream.Write(buf, 0, buf.Length);
-                Console.WriteLine("a message was send");
+                Console.WriteLine("a message was send"); 
             }
             catch
             {
@@ -241,7 +279,7 @@
             NetworkSystem ns = NetworkSystem.Instance;
             byte[] buff = new byte[1024];
             Console.WriteLine("Send Message : REQUEST_JOIN_ROOM%$%" + ns.NickName + "%$%" + SelectedRoom.Number);
-            buff = System.Text.Encoding.UTF8.GetBytes("REQUEST_JOIN_ROOM%$%" + ns.NickName + "%$%" + SelectedRoom.Number);
+            buff = System.Text.Encoding.UTF8.GetBytes("REQUEST_JOIN_ROOM%$%" + ns.NickName + "%$%" + SelectedRoom.Number+"\r\n");
             try
             {
                 ns.Stream.Write(buff, 0, buff.Length);

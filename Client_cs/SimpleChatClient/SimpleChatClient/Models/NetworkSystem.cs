@@ -22,6 +22,7 @@ namespace SimpleChatClient
 
         public NetworkStream Stream { get; private set; }
         private TcpClient _tcpc;
+        public int joiningRoomNumber { get; set; }
         public TcpClient tcpc
         {
             get { return _tcpc; }

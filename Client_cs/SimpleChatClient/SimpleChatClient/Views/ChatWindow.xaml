@@ -32,7 +32,8 @@
                     </ScrollViewer>
                     <ListView
                         Grid.Column="1"
-                        Name="sv_Userlist"/>
+                        Name="sv_Userlist"
+                        ItemsSource="{Binding Users}"/>
                 </Grid>
             </Grid>
             <Grid

@@ -2,9 +2,11 @@
 namespace SimpleChatClient.Views
 {
     using System.Windows;
+    using System;
 
     using SimpleChatClient.Models;
     using SimpleChatClient.ViewModels;
+
     /// <summary>
     /// RoomListWindow.xaml에 대한 상호 작용 논리
     /// </summary>
@@ -18,6 +20,11 @@ namespace SimpleChatClient.Views
             InitializeComponent();
             RoomListWindowViewModel vm = new RoomListWindowViewModel(NickName);
             DataContext = vm;
+            if(vm.CloseAction == null) vm.CloseAction = new Action(this.Close);
+            if(vm.OpenChatWindowAction == null)
+                vm.OpenChatWindowAction = new Action(() => { ChatWindow chatWindow = new ChatWindow(vm.SelectedRoom.Number); chatWindow.Show(); });
+            if (vm.OpenChatWindowActionWithCreate == null)
+                vm.OpenChatWindowActionWithCreate = new Action(() => { ChatWindow chatWindow = new ChatWindow(vm.createRoomNumber); chatWindow.Show(); });
         }
 
         private void Btn_exit_Click(object sender, RoutedEventArgs e)
@@ -25,21 +32,5 @@ namespace SimpleChatClient.Views
             this.Close();
         }
         
-        private void Btn_joinRoom_Click(object sender, RoutedEventArgs e)
-        {
-            /*
-            Room room = (Room)RoomListView.SelectedItem;
-            if (room == null)
-                Console.WriteLine("No Select");
-            else
-            {
-                Console.WriteLine("the room number of Selected item : ", room.ID);
-                if(ns.RequestJoin(room.ID) < 0 )
-                { // 실패의 경우
-                    MessageBox.Show("해당 방에 접속하는 것이 실패하였습니다.", "접속 실패", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-            */
-        }
     }
 }
