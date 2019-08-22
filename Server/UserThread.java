@@ -115,35 +115,43 @@ public class UserThread extends Thread {
 					String[] joinRoomStr = str.split("\\%\\$\\%"); // [0] : 요청 메세지, [1] : 참여할 유저, [2] : 참여할 방 번호
 					System.out.println("메세지 분리 확인용 - 0 : " + joinRoomStr[0] + " 1 : " + joinRoomStr[1] + " 2 : " + joinRoomStr[2]);
 					roomInstance.getRoomInfo(Integer.parseInt(joinRoomStr[2])).setAddEntry(joinRoomStr[1]); // 방 정보에 참여 유저 넣기
-					// 참여자 목록 보내기
-					String users = "USERS";
-					for (int i = 0; i < roomInstance.getRoomInfo(Integer.parseInt(joinRoomStr[2])).entryList.size(); i++) {
-						System.out.println("참여자 목록 가져오는 중 / 현재 진행도 : " + users);
-						users += "%$%";
-						users += roomInstance.getRoomInfo(Integer.parseInt(joinRoomStr[2])).entryList.get(i);
-						System.out.println("참여자 목록 가져오는 중 / 현재 완료된 진행 : " + users);
-					}
-					users += "\r\n";
-					// 참여한 방에 참여자 정보 전달
-					ArrayList<String> joinUsers = roomInstance.getRoomInfo(Integer.parseInt(joinRoomStr[2])).entryList; // 참여한 방의 유저 리스트
-					System.out.println("참여한 방의 갱신된 유저 목록 : " + joinUsers);
-					for (int i = 0; i < joinUsers.size(); i++) { // 채팅 전송
-						System.out.println("참여한 방의 유저들에게 참여자 정보 전송중 / 현재 " + i + "번 유저에게 전송 대기 중");
-						PrintWriter sendChat = new PrintWriter(userInstance.getUserSocket(joinUsers.get(i)).getOutputStream());
+					Pwriter.println("FINISH_JOIN");
+					Pwriter.flush();
+					str = null;
+					str = Breader.readLine();
+					System.out.println("참여 확인용");
+					if(str.equals("READY_FOR_JOIN")) { // 후 처리 전 메세지 받기
+						// 참여자 목록 보내기
+						String users = "USERS";
+						for (int i = 0; i < roomInstance.getRoomInfo(Integer.parseInt(joinRoomStr[2])).entryList.size(); i++) {
+							System.out.println("참여자 목록 가져오는 중 / 현재 진행도 : " + users);
+							users += "%$%";
+							users += roomInstance.getRoomInfo(Integer.parseInt(joinRoomStr[2])).entryList.get(i);
+							System.out.println("참여자 목록 가져오는 중 / 현재 완료된 진행 : " + users);
+						}
+						users += "\r\n";
 						Pwriter.println(users);
 						Pwriter.flush();
-						sendChat.println(joinRoomStr[1] + "님이 참여하셨습니다.\r\n");
-						sendChat.flush();
-						System.out.println("참여한 방의 유저들에게 참여자 정보 전송중 / 현재 " + i + "번 유저까지 전송 완료 상태");
-					}
-					System.out.println("참여한 방의 유저에게 새로운 참여자 전송 완료");
-					System.out.println("전체 유저에게 인원수가 변경된 방 알림");
-					for (int i = 0; i < userInstance.getSizeInfo(); i++) {
-						System.out.println(i + "번 유저에게 전송 준비 중");
-						PrintWriter sendChangePeople = new PrintWriter(userInstance.getUserInfo(i).socket.getOutputStream());
-						sendChangePeople.println("NOTIFY_CHAGE_ROOM%$%" + joinRoomStr[2] + "%$%" + roomInstance.getRoomInfo(Integer.parseInt(joinRoomStr[2])).entryList.size());
-						sendChangePeople.flush();
-						System.out.println(i + "번 유저까지 전송 완료");
+					
+						// 참여한 방에 참여자 정보 전달
+						ArrayList<String> joinUsers = roomInstance.getRoomInfo(Integer.parseInt(joinRoomStr[2])).entryList; // 참여한 방의 유저 리스트
+						System.out.println("참여한 방의 갱신된 유저 목록 : " + joinUsers);
+						for (int i = 0; i < joinUsers.size(); i++) { // 채팅 전송
+							System.out.println("참여한 방의 유저들에게 참여자 정보 전송중 / 현재 " + i + "번 유저에게 전송 대기 중");
+							PrintWriter sendChat = new PrintWriter(userInstance.getUserSocket(joinUsers.get(i)).getOutputStream());
+							sendChat.println(joinRoomStr[1] + "님이 참여하셨습니다.\r\n");
+							sendChat.flush();
+							System.out.println("참여한 방의 유저들에게 참여자 정보 전송중 / 현재 " + i + "번 유저까지 전송 완료 상태");
+						}
+						System.out.println("참여한 방의 유저에게 새로운 참여자 전송 완료");
+						System.out.println("전체 유저에게 인원수가 변경된 방 알림");
+						for (int i = 0; i < userInstance.getSizeInfo(); i++) {
+							System.out.println(i + "번 유저에게 전송 준비 중");
+							PrintWriter sendChangePeople = new PrintWriter(userInstance.getUserInfo(i).socket.getOutputStream());
+							sendChangePeople.println("NOTIFY_CHAGE_ROOM%$%" + joinRoomStr[2] + "%$%" + roomInstance.getRoomInfo(Integer.parseInt(joinRoomStr[2])).entryList.size());
+							sendChangePeople.flush();
+							System.out.println(i + "번 유저까지 전송 완료");
+						}
 					}
 					System.out.println("방 참여와 후처리 완료");
 					joinRoomStr = null;
