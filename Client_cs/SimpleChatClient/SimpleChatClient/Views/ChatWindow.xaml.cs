@@ -8,11 +8,12 @@ namespace SimpleChatClient
     /// </summary>
     public partial class ChatWindow : Window
     {
-        public ChatWindow()
+        public ChatWindow(int RoomNumber)
         { 
             InitializeComponent();
+            ViewModels.ChatWindowViewModel vm = new ViewModels.ChatWindowViewModel();
+            DataContext = vm;
         }
-        
-        
+
     }
 }
