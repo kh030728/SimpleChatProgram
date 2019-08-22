@@ -88,21 +88,27 @@ public class UserThread extends Thread {
 					System.out.println("메세지 분리 확인용 - 0 : " + createRoomStr[0] + " 1 : " + createRoomStr[1] + " 2 : " + createRoomStr[2]);
 					Room room = new Room(createRoomStr[1], createRoomStr[2]);
 					roomInstance.addRoom(room);
-					for (int i = 0; i < userInstance.getSizeInfo(); i++) { // 방 생성 후 갱신된 방 정보 재 전송
-						System.out.println("생성 후 갱신된 방 정보 전송 준비중");
-						PrintWriter NotifyAddRoom = new PrintWriter(userInstance.getUserInfo(i).socket.getOutputStream());
-						int addRoomNu = 0;
-						for (int j = roomInstance.getRoomAll() - 1; j >= 0; j--) {
-							System.out.println("생성한 방 번호 찾는 중");
-							if (roomInstance.getRoomInfo(j).roomNa == createRoomStr[1]) {
-								addRoomNu = j;
-								System.out.println("생성한 방 번호 : " + j);
-								break;
-							}
+					int addRoomNu = 0;
+					for (int i = roomInstance.getRoomAll() - 1; i >= 0; i--) {
+						System.out.println("생성한 방 번호 찾는 중 / 현재 탐색 시작할 방 번호 : " + i);
+						if (roomInstance.getRoomInfo(i).roomNa == createRoomStr[1]) {
+							addRoomNu = i;
+							System.out.println("탐색 완료한 방 번호 : " + i);
+							break;
 						}
-						NotifyAddRoom.println("NOTIFY_ADD_ROOM%$%" + addRoomNu + "%$%" + createRoomStr[1] + "%$%" + roomInstance.getRoomInfo(addRoomNu).entryList.size() +"\r\n");
-						NotifyAddRoom.flush();
-						System.out.println("갱신된 방 정보 전송 완료");
+					}
+					System.out.println("생성한 방 번호 : " + addRoomNu);
+					Pwriter.println("SUCCESS_CREATE_ROOM%$%" + addRoomNu);
+					str = null;
+					str = Breader.readLine();
+					if(str.equals("READY_FOR_JOIN")) {
+						for (int i = 0; i < userInstance.getSizeInfo(); i++) { // 방 생성 후 갱신된 방 정보 재 전송
+							System.out.println("생성 후 갱신된 방 정보 전송 준비중");
+							PrintWriter NotifyAddRoom = new PrintWriter(userInstance.getUserInfo(i).socket.getOutputStream());
+							NotifyAddRoom.println("NOTIFY_ADD_ROOM%$%" + addRoomNu + "%$%" + createRoomStr[1] + "%$%" + roomInstance.getRoomInfo(addRoomNu).entryList.size() +"\r\n");
+							NotifyAddRoom.flush();
+							System.out.println("갱신된 방 정보 전송 완료");
+						}
 					}
 					System.out.println("방 생성과 생성 후 후처리 완료");
 					createRoomStr = null;
