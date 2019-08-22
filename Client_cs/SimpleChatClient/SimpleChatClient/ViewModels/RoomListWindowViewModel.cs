@@ -7,6 +7,7 @@
 
     using SimpleChatClient.Models;
     using System.Windows.Threading;
+    using System.Windows;
 
     internal class RoomListWindowViewModel
     {
@@ -22,7 +23,7 @@
         /// </summary>
         public RoomListWindowViewModel(string nickName)
         {
-            Console.Write("RoomListWindowViewModel 생성자 실행");
+            Console.WriteLine("RoomListWindowViewModel 생성자 실행");
             #region Initialize Models
             NickName = nickName; // 사용자의 별칭 저장 및 UI에 반영
             _roomItemHandler = new RoomItemHandler(); // 방 목록에 정보가 갱신될 때에 처리를 위한 Handler
@@ -115,7 +116,7 @@
             #endregion
             Readthread.Start();
             DownloadRoomData(); // 방목록을 받아옴
-            Console.WriteLine("-----> 완료");
+            Console.WriteLine("생성자 완료");
         }
         #region Define Commands
         /// <summary>
@@ -196,7 +197,6 @@
             
 
             NetworkSystem networkSystem = NetworkSystem.Instance;
-            string Msg;
             if (networkSystem.Stream == null)
             {
                 Console.WriteLine("NeworkStream is null");
@@ -224,34 +224,6 @@
                 return;
             }
             #endregion
-            /*
-            #region Receive Message for a confirm of Request
-            byte[] buff = new byte[1024];
-            try
-            {
-                networkSystem.Stream.Read(buff, 0, buff.Length);
-                Msg = System.Text.Encoding.UTF8.GetString(buff).Trim(new char[] { '\0', '\n', '\r' });
-                Console.WriteLine("The received Message : {0}", Msg);
-            }
-            catch
-            {
-                Console.WriteLine("방생성 메시지 수신 오류");
-                Console.WriteLine("-------------------------------------------------");
-                return;
-            }
-            #endregion
-            #region Check the message
-            if (Msg == "SUCCESS_CREATE_ROOM")
-            {
-                Console.WriteLine("The request has successed");
-            }
-            else
-            {
-                Console.WriteLine("The request has failed");
-            }
-            #endregion
-            Console.WriteLine("-------------------------------------------------");
-            */
         }
         #endregion
         #region Methods for the JoinCommand class
@@ -262,45 +234,24 @@
             Console.WriteLine("Start RoomListWindowViewModel::JoinRoom(void)"); 
             if (SelectedRoom == null)
             {
-                Console.WriteLine("Selected Item is null");
+                Console.WriteLine("JoinRoom :: Selected Item is null");
+                MessageBox.Show("입장할 방을 선택하신 후에 입장 버튼을 눌러주세요.","입장 오류",MessageBoxButton.OK,MessageBoxImage.Asterisk);
                 return;
             }
-            Readthread.Abort();
             NetworkSystem ns = NetworkSystem.Instance;
             byte[] buff = new byte[1024];
-            Console.WriteLine("REQUEST_JOIN_ROOM%$%" + ns.NickName + "%$%" + SelectedRoom.Number);
+            Console.WriteLine("Send Message : REQUEST_JOIN_ROOM%$%" + ns.NickName + "%$%" + SelectedRoom.Number);
             buff = System.Text.Encoding.UTF8.GetBytes("REQUEST_JOIN_ROOM%$%" + ns.NickName + "%$%" + SelectedRoom.Number);
             try
             {
                 ns.Stream.Write(buff, 0, buff.Length);
-                Console.WriteLine("전송완료");
+                Console.WriteLine("Send Success");
             }
             catch
             {
-                Console.WriteLine("전송실패");
+                Console.WriteLine("Send Failed");
                 Console.WriteLine("-------------------------------------------------");
                 return;
-            }
-            buff = new byte[1024];
-            try
-            {
-                ns.Stream.Read(buff, 0, buff.Length);
-                Console.WriteLine("수신완료");
-            }
-            catch
-            {
-                Console.WriteLine("수신실패");
-                Console.WriteLine("-------------------------------------------------");
-                return;
-            }
-            string msg = System.Text.Encoding.UTF8.GetString(buff);
-            if (msg.Contains("USERS%$%"))
-            {
-                string[] user = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string elem in user)
-                {
-                    Console.WriteLine("참여자 : {0}", elem);
-                }
             }
             
             Console.WriteLine("-------------------------------------------------");
