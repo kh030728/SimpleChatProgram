@@ -33,11 +33,12 @@
             </ListView>
             <TextBlock 
                 Grid.Row="0"
-                    Text="{Binding NickName}"
-                    FontSize="30"
-                    Margin="11"
-                    Name="TB_NickName"
-                    Foreground="White"/>
+                Text="{Binding NickName}"
+                FontSize="30"
+                Margin="11"
+                HorizontalAlignment="Center"
+                Name="TB_NickName"
+                Foreground="White"/>
             <StackPanel 
                 Grid.Row="2"
                 Orientation="Vertical">
