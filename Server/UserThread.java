@@ -57,7 +57,8 @@ public class UserThread extends Thread {
 					}
 				}
 			}
-
+			System.out.println("============================");
+			System.out.println("============================");
 			while (true) {
 				String str = Breader.readLine(); // 입력된 데이타를 한 줄 단위로 읽음
 				System.out.println("받은 메세지 : " + str); // 입력 확인용
@@ -76,7 +77,6 @@ public class UserThread extends Thread {
 						Thread.sleep(50);
 						System.out.println("방정보 보내는중 " + i + "개 완료");
 					}
-					Pwriter.flush();
 					System.out.println("방정보 전송 끝");
 					str = null;
 				}
@@ -99,6 +99,7 @@ public class UserThread extends Thread {
 					}
 					System.out.println("생성한 방 번호 : " + addRoomNu);
 					Pwriter.println("SUCCESS_CREATE_ROOM%$%" + addRoomNu);
+					Pwriter.flush();
 					str = null;
 					str = Breader.readLine();
 					if(str.equals("READY_FOR_JOIN")) {
