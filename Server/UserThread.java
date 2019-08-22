@@ -102,14 +102,17 @@ public class UserThread extends Thread {
 					Pwriter.flush();
 					str = null;
 					str = Breader.readLine();
+					System.out.println("추가 메세지 확인 : " + str);
 					if(str.equals("READY_FOR_JOIN")) {
-						for (int i = 0; i < userInstance.getSizeInfo(); i++) { // 방 생성 후 갱신된 방 정보 재 전송
-							System.out.println("생성 후 갱신된 방 정보 전송 준비중");
-							PrintWriter NotifyAddRoom = new PrintWriter(userInstance.getUserInfo(i).socket.getOutputStream());
-							NotifyAddRoom.println("NOTIFY_ADD_ROOM%$%" + addRoomNu + "%$%" + createRoomStr[1] + "%$%" + roomInstance.getRoomInfo(addRoomNu).entryList.size() +"\r\n");
-							NotifyAddRoom.flush();
-							System.out.println("갱신된 방 정보 전송 완료");
-						}
+						Pwriter.println("USERS%$%" + createRoomStr[2]);
+						Pwriter.flush();
+					}
+					for (int i = 0; i < userInstance.getSizeInfo(); i++) { // 방 생성 후 갱신된 방 정보 재 전송
+						System.out.println("생성 후 갱신된 방 정보 전송 준비중");
+						PrintWriter NotifyAddRoom = new PrintWriter(userInstance.getUserInfo(i).socket.getOutputStream());
+						NotifyAddRoom.println("NOTIFY_ADD_ROOM%$%" + addRoomNu + "%$%" + createRoomStr[1] + "%$%" + roomInstance.getRoomInfo(addRoomNu).entryList.size() +"\r\n");
+						NotifyAddRoom.flush();
+						System.out.println("갱신된 방 정보 전송 완료");
 					}
 					System.out.println("방 생성과 생성 후 후처리 완료");
 					createRoomStr = null;
@@ -126,7 +129,7 @@ public class UserThread extends Thread {
 					Pwriter.flush();
 					str = null;
 					str = Breader.readLine();
-					System.out.println("참여 확인용");
+					System.out.println("참여 확인용" + str);
 					if(str.equals("READY_FOR_JOIN")) { // 후 처리 전 메세지 받기
 						// 참여자 목록 보내기
 						String users = "USERS";
