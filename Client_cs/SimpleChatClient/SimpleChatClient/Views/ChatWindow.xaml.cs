@@ -29,6 +29,11 @@
                 vm.ScrolltoBottom = new Action(() => { chatScroll.ScrollToBottom(); });
             if(vm.ShowRoomListWindow == null)
                 vm.ShowRoomListWindow = new Action(() => { RoomListWindow roomListWindow = new RoomListWindow(NetworkSystem.Instance.NickName); roomListWindow.Show(); });
+            if (vm.CloseWindow == null)
+                vm.CloseWindow = new Action(() =>
+                {
+                    this.Close();
+                });
         }
 
         private void ChatPressEnter(object sender, KeyEventArgs e)
@@ -39,9 +44,10 @@
 
         private void CloseWindow(object sender, RoutedEventArgs e)
         {
-            vm.readThread.Join();
-            vm.ShowRoomListWindow();
-            this.Close();
+            byte[] buff = new byte[1024];
+            buff = System.Text.Encoding.UTF8.GetBytes("REQUEST_OUT_ROOM%$%" + NetworkSystem.Instance.NickName + "\r\n");
+            NetworkSystem.Instance.Stream.Write(buff, 0, buff.Length);
+            Console.WriteLine("Click close window");
         }
     }
 }

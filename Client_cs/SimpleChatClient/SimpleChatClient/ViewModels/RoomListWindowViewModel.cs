@@ -42,7 +42,7 @@
             Readthread.SetApartmentState(ApartmentState.STA);
             Readthread.IsBackground = true;
             Readthread.Start("aa");
-            
+            Thread.Sleep(50);
             DownloadRoomData(); // 방목록을 받아옴
             Console.WriteLine("생성자 완료");
         }

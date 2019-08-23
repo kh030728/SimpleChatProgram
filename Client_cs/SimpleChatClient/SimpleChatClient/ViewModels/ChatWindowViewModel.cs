@@ -41,6 +41,7 @@
         public Action ChatMessageClear { get; set; }
         public Action ScrolltoBottom { get; set; }
         public Action ShowRoomListWindow { get; set; }
+        public Action CloseWindow { get; set; }
         #endregion
 
         /// <summary>
@@ -94,6 +95,9 @@
                     }
                     else if(msg.Contains("OUT_ROOM_OK"))
                     {
+                        Console.WriteLine("ChatWindowViewModel:: ReadThread :: OUT OK");
+                        STAthread.Invoke(ShowRoomListWindow);
+                        STAthread.Invoke(CloseWindow);
                         return;
                     }
                 }
@@ -160,13 +164,6 @@
             #endregion
             Console.WriteLine("ChatWindowViewModel :: send Ready for join");
         }
-
-        ~ChatWindowViewModel()
-        {
-            byte[] buff = new byte[1024];
-            buff = System.Text.Encoding.UTF8.GetBytes("REQUEST_OUT_ROOM%$%" + NetworkSystem.Instance.NickName + "\r\n");
-            NetworkSystem.Instance.Stream.Write(buff, 0, buff.Length);
-        }
-
+        
     }
 }
