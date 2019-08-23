@@ -22,8 +22,13 @@ public class UsersInfo {
 		userInfo.add(user);
 	}
 	
-	public void removeUser(int i) {
-		userInfo.remove(i);
+	public void removeUser(String user) {
+		for(int i = 0; i < userInfo.size(); i++) {
+			if(userInfo.get(i).nickName == user) {
+				userInfo.remove(i);
+			}
+			break;
+		}
 	}
 	
 	public Integer getSizeInfo() {

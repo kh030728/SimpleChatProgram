@@ -183,11 +183,13 @@ public class UserThread extends Thread {
 				// 방 나가기
 				else if (str.contains("REQUEST_OUT_ROOM%$%")) {
 					System.out.println("방 나가기 메세지 요청 수신 완료 / 수신된 메세지 : " + str);
-					String[] outRoomStr = str.split("\\%\\$\\%"); // [0] : 요청 메세지, [1] : 나간 유저, [2]: 나간 방 번호
+					String[] outRoomStr = str.split("\\%\\$\\%"); // [0] : 요청 메세지, [1] : 나간 유저
 					System.out.println("메세지 분리 확인용 - 0 : " + outRoomStr[0] + " 1 : " + outRoomStr[1] + " 2 : " + outRoomStr[2]);
 					roomInstance.getRoomInfo(Integer.parseInt(outRoomStr[2])).RemoveEntry(userInfo); // 해당 방의 유저 목록에서 나간 유저 삭제
+					Pwriter.println("OUR_ROOM_OK");
+					Pwriter.flush();
 					// 나간 유저 정보 전달
-					ArrayList<User> joinUsers = roomInstance.getRoomInfo(Integer.parseInt(outRoomStr[2])).entry; // 참여한 방의 유저 리스트
+					ArrayList<User> joinUsers = roomInstance.getRoomInfo(userInfo.roomNu).entry; // 참여한 방의 유저 리스트
 					if (joinUsers.size() != 0) {
 						System.out.println("해당 방에 남아있는 유저가 있다면 그 유저들에게 퇴장 메세지 전송");
 						for (int i = 0; i < joinUsers.size(); i++) { // 채팅 전송
@@ -197,6 +199,9 @@ public class UserThread extends Thread {
 							sendChat.flush();
 							System.out.println(i + "번 유저까지 전송 완료");
 						}
+					}
+					else {
+						roomInstance.removeRoom(userInfo.roomNu);
 					}
 					userInfo.roomNu = 0;
 					System.out.println("방 나가기 요청과 후처리 완료");
@@ -220,36 +225,30 @@ public class UserThread extends Thread {
 				}
 				
 				// 프로그램 종료
-				else if(str.contains("OUT_USER%$%")) {
+				else if(str.contains("REQUEST_OUT_USER%$%")) { // (닉네임 받을 필요 없음(수정 필요))
 					System.out.println("채팅 전송 요청 메세지 / 받은 메세지 : " + str);
 					String[] outUser = str.split("\\%\\$\\%"); //[0] : 요청 메세지, [1] : 유저 닉네임 
 					System.out.println("받은 메세지 분리 확인 - [0] : " + outUser[0] + " [1] : " + outUser[1]);
-					int userNu = 0;
-					for(int i = 0; i < userInstance.getSizeInfo(); i++) { // 유저 번호 찾기
-						if(userInstance.getUserInfo(i).nickName == outUser[1]) {
-							userNu = i;
-							break;
-						}
-					}
-					if(userInfo.roomNu != 0) { // 방 안에 있던 유저가 종료 했을 때 그 방 목록에서도 해당 유저 삭제 
-						roomInstance.getRoomInfo(userInfo.roomNu).entry.remove(userInfo); // 방 목록에서 유저 삭제
-						// 나간 유저 정보 전달
-						ArrayList<User> joinUsers = roomInstance.getRoomInfo(userInfo.roomNu).entry; // 참여한 방의 유저 리스트
-						if (joinUsers.size() != 0) {
-							System.out.println("해당 방에 남아있는 유저가 있다면 그 유저들에게 퇴장 메세지 전송");
-							for (int i = 0; i < joinUsers.size(); i++) { // 채팅 전송
-								System.out.println(i + "번 유저에게 전송 준비중");
-								PrintWriter sendChat = new PrintWriter(joinUsers.get(i).socket.getOutputStream());
-								sendChat.println("OUT_USER%$%" + outUser[1]);
-								sendChat.flush();
-								System.out.println(i + "번 유저까지 전송 완료");
+					userInstance.removeUser(userInfo.nickName);
+				}
+				
+				// 강제 종료
+				else if(socket == null) {
+					if(userInfo.roomNu != 0) {
+						if(roomInstance.getRoomInfo(userInfo.roomNu).entry != null) {
+							ArrayList<User> roomUser = roomInstance.getRoomInfo(userInfo.roomNu).entry;
+							for(int i = 0; i < roomUser.size(); i++) {
+								PrintWriter notifyOutRoom = new PrintWriter(roomUser.get(i).socket.getOutputStream());
+								notifyOutRoom.println("OUT_USER%$%" + userInfo.nickName);
+								notifyOutRoom.flush();
 							}
 						}
-						userInstance.removeUser(userNu); // 유저 목록에서 해당 유저 삭제
+						else {
+							roomInstance.removeRoom(userInfo.roomNu);
+						}
 					}
-					else { // 대기실에 있던 유저가 종료 했을 때 유저 목록에서만 삭제
-						userInstance.removeUser(userNu);
-					}
+					userInstance.removeUser(userInfo.nickName);
+					
 				}
 				System.out.println("====================================");
 			}
