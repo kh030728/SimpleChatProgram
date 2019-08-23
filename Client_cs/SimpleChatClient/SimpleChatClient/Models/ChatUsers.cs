@@ -11,7 +11,17 @@
         {
 
         }
-
+        public void remove(string user)
+        {
+            for(int i = 0; i < this.Count; i++)
+            {
+                if(this[i].NickName == user)
+                {
+                    this.RemoveAt(i);
+                    return;
+                }
+            }
+        }
         #region ObservableCollection member
         public override event NotifyCollectionChangedEventHandler CollectionChanged;
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)

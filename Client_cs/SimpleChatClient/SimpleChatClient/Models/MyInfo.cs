@@ -6,7 +6,7 @@
     {
         private MyInfo()
         {
-            NickName = "NickName";
+            NickName = "";
             Address = "127.0.0.1";
         }
         private static MyInfo _Instance = null;
