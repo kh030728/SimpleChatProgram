@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading;
+    using System.Windows;
     using System.Windows.Input;
     using System.Windows.Threading;
 
@@ -88,6 +89,11 @@
             if(chatMessage.Message =="")
             {
                 Console.WriteLine("Please input a message.");
+                return;
+            }
+            if (chatMessage.Message.Contains("%$%"))
+            {
+                MessageBox.Show("문자열 \"%$%\"을 포함할 수 없습니다.", "입력 제한", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                 return;
             }
             try
