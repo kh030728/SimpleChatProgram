@@ -63,7 +63,7 @@
                         Users.Add(new User(userNameArray[i]));
                     }
                 }
-                else if (msg.Contains("CHAT%$%"))
+                else if (msg.Contains("SEND_CHAT%$%"))
                 {
                     try
                     {
@@ -98,7 +98,7 @@
             }
             try
             {
-                buff = System.Text.Encoding.UTF8.GetBytes("CHAT%$%"+RoomNumber+"%$%"+NetworkSystem.Instance.NickName+"%$%"+chatMessage.Message+"\r\n");
+                buff = System.Text.Encoding.UTF8.GetBytes("SEND_CHAT%$%"+RoomNumber+"%$%"+NetworkSystem.Instance.NickName+"%$%"+chatMessage.Message+"\r\n");
                 NetworkSystem.Instance.Stream.Write(buff, 0, buff.Length);
                 Console.WriteLine("A sending process have been completed.");
                 ChatMessageClear();
