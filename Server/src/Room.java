@@ -23,9 +23,9 @@ public class Room {
 		entry.add(entryUser);
 	}
 	
-	public void RemoveEntry(User entryUser) {
+	public void RemoveEntry(String nickName) {
 		for(int i = 0; i < entry.size(); i++) {
-			if(entry.get(i) == entryUser) {
+			if(entry.get(i).nickName == nickName) {
 				entry.remove(i);
 			}
 			break;
