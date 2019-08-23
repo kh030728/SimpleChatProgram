@@ -26,14 +26,37 @@
                     </Grid.ColumnDefinitions>
                     <ScrollViewer
                         Grid.Column="0"
-                        Name="sv_Chatlog">
-                        <StackPanel
-                            Name ="chatStackPanel"/>
+                        Name="chatScroll">
+                        <ItemsControl x:Name="chatStack" ItemsSource="{Binding chatLogs}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="5 5 5 5">
+                                        <Border Background="LightSkyBlue" CornerRadius="15 0 0 0">
+                                            <TextBlock Margin="10 5 10 0" x:Name="chatItem_NickName" Text="{Binding NickName}" FontSize="12" TextWrapping="Wrap"/>
+                                        </Border>
+                                        <Border Background="#FF01E8FF" CornerRadius="0 0 15 0">
+                                            <TextBlock Margin="10 0 10 5" x:Name="chatItem_Message" Text="{Binding Message}" FontSize="18" TextWrapping="Wrap"/>
+                                        </Border>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </ScrollViewer>
                     <ListView
                         Grid.Column="1"
                         Name="sv_Userlist"
-                        ItemsSource="{Binding Users}"/>
+                        ItemsSource="{Binding Users}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="이름" Width ="130" DisplayMemberBinding="{Binding NickName}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
                 </Grid>
             </Grid>
             <Grid
@@ -43,14 +66,17 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <TextBox
-                    Name="tbx_chatInput"
+                    Name="ChatMessage_TextBox"
                     Margin="5"
-                    Grid.Column="0"/>
+                    Grid.Column="0"
+                    Text ="{Binding chatMessage.Message, UpdateSourceTrigger=PropertyChanged}"
+                    KeyDown="ChatPressEnter"/>
                 <Button
                     Content="전송"
                     Margin="5"
                     Grid.Column="1"
                     Foreground="WhiteSmoke"
+                    Command="{Binding ChatButton}"
                     Name="sendButton">
                     <Button.Background>
                         <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>

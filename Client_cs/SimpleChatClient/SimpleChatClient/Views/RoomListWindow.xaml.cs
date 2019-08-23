@@ -1,10 +1,8 @@
-﻿
-namespace SimpleChatClient.Views
+﻿namespace SimpleChatClient.Views
 {
     using System.Windows;
     using System;
-
-    using SimpleChatClient.Models;
+    
     using SimpleChatClient.ViewModels;
 
     /// <summary>

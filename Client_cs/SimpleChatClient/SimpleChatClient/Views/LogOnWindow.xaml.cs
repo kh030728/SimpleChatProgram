@@ -1,9 +1,10 @@
-﻿using System.Windows;
-using System.Windows.Media;
+﻿
 namespace SimpleChatClient.Views
 {
-    using SimpleChatClient.ViewModels;
+    using System.Windows;
     using System;
+
+    using SimpleChatClient.ViewModels;
 
     public partial class LogOnWindow : Window
     {

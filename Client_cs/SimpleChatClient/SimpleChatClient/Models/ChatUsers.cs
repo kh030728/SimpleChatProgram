@@ -12,7 +12,7 @@
 
         }
 
-
+        #region ObservableCollection member
         public override event NotifyCollectionChangedEventHandler CollectionChanged;
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
@@ -36,10 +36,18 @@
                 }
             }
         }
+        #endregion
     }
 
     public class User
     {
         public string NickName { get; set; }
+        /// <summary>
+        /// Initializes a new instance of The User class.
+        /// </summary>
+        public User(string nick)
+        {
+            NickName = nick;
+        }
     }
 }
