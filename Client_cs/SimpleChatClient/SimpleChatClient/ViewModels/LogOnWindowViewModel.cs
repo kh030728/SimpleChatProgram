@@ -58,7 +58,7 @@
             try
             {
                 byte[] buff = new byte[1024];
-                buff = System.Text.Encoding.UTF8.GetBytes("NICKNAME%$%" + TextData.NickName+"\r\n");
+                buff = System.Text.Encoding.UTF8.GetBytes("NICKNAME%$%" + TextData.NickName + "\r\n");
                 networkSystem.Stream.Write(buff, 0, buff.Length);
             }
             catch
@@ -68,6 +68,16 @@
                 Console.WriteLine("-------------------------------------------------");
             }
             Console.WriteLine("A message send Successed");
+            //try catch안해야지...
+            byte[] inbuf = new byte[1024];
+            networkSystem.Stream.Read(inbuf, 0, inbuf.Length);
+            string msg = System.Text.Encoding.UTF8.GetString(inbuf).Trim(new char[] { '\n', '\0', '\r' });
+            if (msg != "NICKNAME_OK")
+            {
+                networkSystem.tcpc = null;
+                networkSystem.NickName = null;
+                return;
+            }
             #endregion
             networkSystem.NickName = TextData.NickName;
             Console.WriteLine("Connection Successed, NickName : {0}", networkSystem.NickName);

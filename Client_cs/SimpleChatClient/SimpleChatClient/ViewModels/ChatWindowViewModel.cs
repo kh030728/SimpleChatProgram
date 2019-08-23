@@ -77,6 +77,18 @@
                         Console.WriteLine("ChatWindowViewModel:: ReadThread :: To add a chat Message have been Failed\n {0}",e);
                     }
                 }
+                else if(msg.Contains("JOIN_USER%$%"))
+                {
+                    string[] joinUser = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
+                    Users.Add(new User(joinUser[1]));
+                    Console.WriteLine("ChatWindowViewModel:: ReadThread :: Join User ( {0} )",joinUser[1]);
+                }
+                else if(msg.Contains("OUT_USER%$%"))
+                {
+                    string[] outUser = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
+                    Users.remove(outUser[1]);
+                    Console.WriteLine("ChatWindowViewModel:: ReadThread :: Out User ( {0} )", outUser[1]);
+                }
             }
         }
 
@@ -136,6 +148,13 @@
             Console.WriteLine("ChatWindowViewModel :: send Ready for join");
 
 
+        }
+
+        ~ChatWindowViewModel()
+        {
+            byte[] buff = new byte[1024];
+            buff = System.Text.Encoding.UTF8.GetBytes("OUT_USER%$%" + NetworkSystem.Instance.NickName + "\r\n");
+            NetworkSystem.Instance.Stream.Write(buff, 0, buff.Length);
         }
 
     }
