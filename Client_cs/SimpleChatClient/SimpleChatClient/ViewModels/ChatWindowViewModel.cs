@@ -69,12 +69,12 @@
                     {
                         string[] userNameArray = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
                         chatLogs.Add(new ChatLog(userNameArray[2], userNameArray[3]));
-                        ScrolltoBottom();
-                        Console.WriteLine("ChatWindowViewModel:: ReadThread :: To add a chat Messagehave been Successed");
+                        STAthread.Invoke(ScrolltoBottom);
+                        Console.WriteLine("ChatWindowViewModel:: ReadThread :: To add a chat Message have been Successed");
                     }
-                    catch
+                    catch(Exception e)
                     {
-                        Console.WriteLine("ChatWindowViewModel:: ReadThread :: To add a chat Messagehave been Failed");
+                        Console.WriteLine("ChatWindowViewModel:: ReadThread :: To add a chat Message have been Failed\n {0}",e);
                     }
                 }
             }
@@ -124,6 +124,7 @@
             STAthread = Dispatcher.CurrentDispatcher;
             Thread readThread = new Thread(new ThreadStart(ReadThread));
             readThread.IsBackground = true;
+            readThread.ApartmentState = ApartmentState.STA;
             #endregion
             readThread.Start();
             Thread.Sleep(50);
