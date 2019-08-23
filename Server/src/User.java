@@ -9,6 +9,7 @@ public class User {
 	String nickName = null;
 	String ip = null;
 	Socket socket = null;
+	int roomNu = 0;
 	
 	public User (String nickName, Socket socket) {
 		this.nickName = nickName;
@@ -25,6 +26,10 @@ public class User {
 	
 	public String getIp() {
 		return ip;
+	}
+	
+	public void setRoomNu(int i) {
+		roomNu = i;
 	}
 
 }

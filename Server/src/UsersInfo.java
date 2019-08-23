@@ -33,14 +33,4 @@ public class UsersInfo {
 	public User getUserInfo(int i) {
 		return userInfo.get(i);
 	}
-	
-	public Socket getUserSocket(String userNick) {
-		Socket userSocket = null;
-		for(int i = 0; i < userInfo.size(); i++) {
-			if(userInfo.get(i).nickName == userNick) {
-				userSocket = userInfo.get(i).socket;
-			}
-		}
-		return userSocket;
-	}
 }
