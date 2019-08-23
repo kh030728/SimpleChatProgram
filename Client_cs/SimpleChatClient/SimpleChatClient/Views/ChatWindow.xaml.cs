@@ -1,5 +1,6 @@
 ﻿namespace SimpleChatClient
 {
+    using SimpleChatClient.Views;
     using System;
     using System.Windows;
     using System.Windows.Input;
@@ -25,12 +26,20 @@
                 vm.ChatMessageClear = new Action( ()=> { ChatMessage_TextBox.Text =""; });
             if (vm.ScrolltoBottom == null)
                 vm.ScrolltoBottom = new Action(() => { chatScroll.ScrollToBottom(); });
+            if(vm.ShowRoomListWindow == null)
+                vm.ShowRoomListWindow = new Action(() => { RoomListWindow roomListWindow = new RoomListWindow(NetworkSystem.Instance.NickName); roomListWindow.Show(); });
         }
 
         private void ChatPressEnter(object sender, KeyEventArgs e)
         {
             if(e.Key == Key.Return)
             vm.Chat();
+        }
+
+        private void CloseWindow(object sender, RoutedEventArgs e)
+        {
+            vm.ShowRoomListWindow();
+            this.Close();
         }
     }
 }

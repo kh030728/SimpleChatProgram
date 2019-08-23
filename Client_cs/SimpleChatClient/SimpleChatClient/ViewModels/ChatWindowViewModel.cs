@@ -20,7 +20,7 @@
         /// A dispatcher about main thread
         /// </summary>
         public Dispatcher STAthread { get; set; }
-
+        Thread readThread;
         public int RoomNumber { get; set; }
 
         public ChatMessage chatMessage { get; private set;}
@@ -40,6 +40,7 @@
         public Action<string, string> ChatLogAdd { get; set; }
         public Action ChatMessageClear { get; set; }
         public Action ScrolltoBottom { get; set; }
+        public Action ShowRoomListWindow { get; set; }
         #endregion
 
         /// <summary>
@@ -91,11 +92,12 @@
                 }
             }
         }
+        
 
-        /// <summary>
-        /// Sends chat message to a server;
-        /// </summary>
-        public void Chat()
+            /// <summary>
+            /// Sends chat message to a server;
+            /// </summary>
+            public void Chat()
         {
             byte[] buff = new byte[1024];
             if(chatMessage.Message =="")
@@ -134,7 +136,7 @@
             chatLogs = new ChatLogs();
             _Users = new ChatUsers();
             STAthread = Dispatcher.CurrentDispatcher;
-            Thread readThread = new Thread(new ThreadStart(ReadThread));
+            readThread = new Thread(new ThreadStart(ReadThread));
             readThread.IsBackground = true;
             readThread.ApartmentState = ApartmentState.STA;
             #endregion
@@ -146,14 +148,13 @@
             NetworkSystem.Instance.Stream.Write(buff, 0, buff.Length);
             #endregion
             Console.WriteLine("ChatWindowViewModel :: send Ready for join");
-
-
         }
 
         ~ChatWindowViewModel()
         {
             byte[] buff = new byte[1024];
-            buff = System.Text.Encoding.UTF8.GetBytes("OUT_USER%$%" + NetworkSystem.Instance.NickName + "\r\n");
+            readThread.Abort();
+            buff = System.Text.Encoding.UTF8.GetBytes("REQUEST_OUT_ROOM%$%" + NetworkSystem.Instance.NickName + "\r\n");
             NetworkSystem.Instance.Stream.Write(buff, 0, buff.Length);
         }
 

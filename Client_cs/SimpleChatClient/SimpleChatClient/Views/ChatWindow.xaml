@@ -6,18 +6,23 @@
         xmlns:local="clr-namespace:SimpleChatClient"
         mc:Ignorable="d"
         Title="ChatWindow" Height="450" Width="600"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        WindowStyle="None" WindowStartupLocation="CenterScreen">
     <Border
-        Padding="10"
         Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}">
         <Grid
             Background="White">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="18"/>
                 <RowDefinition Height="4*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            <Button Grid.Row="0" Width="24" HorizontalAlignment="Right" VerticalContentAlignment="Center" Content="X" Click="CloseWindow"/>
             <Grid
-                Grid.Row="0">
+                Grid.Row="1">
                 <Grid
                     Margin="0 0 0 10">
                     <Grid.ColumnDefinitions>
@@ -60,7 +65,7 @@
                 </Grid>
             </Grid>
             <Grid
-                Grid.Row="1">
+                Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="4*"/>
                     <ColumnDefinition Width="*"/>
@@ -85,5 +90,4 @@
             </Grid>
         </Grid>
     </Border>
-
 </Window>

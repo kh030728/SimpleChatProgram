@@ -263,6 +263,14 @@
             Console.WriteLine("-------------------------------------------------");
             #endregion
         }
+
+        ~RoomListWindowViewModel()
+        {
+            byte[] buff = new byte[1024];
+            buff = System.Text.Encoding.UTF8.GetBytes("REQUEST_OUT_USER%$%" + NetworkSystem.Instance.NickName + "\r\n");
+            NetworkSystem.Instance.Stream.Write(buff, 0, buff.Length);
+        }
+
         #endregion
         #region Methods for the JoinCommand class
         public void JoinRoom()
