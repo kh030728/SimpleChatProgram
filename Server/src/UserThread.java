@@ -137,7 +137,7 @@ public class UserThread extends Thread {
 						for (int i = 0; i < roomInstance.getRoomInfo(Integer.parseInt(joinRoomStr[2])).entry.size(); i++) {
 							System.out.println("참여자 목록 가져오는 중 / 현재 진행도 : " + users);
 							users += "%$%";
-							users += roomInstance.getRoomInfo(Integer.parseInt(joinRoomStr[2])).entry.get(i);
+							users += roomInstance.getRoomInfo(Integer.parseInt(joinRoomStr[2])).entry.get(i).nickName;
 							System.out.println("참여자 목록 가져오는 중 / 현재 완료된 진행 : " + users);
 						}
 						users += "\r\n";
@@ -150,7 +150,7 @@ public class UserThread extends Thread {
 						for (int i = 0; i < joinUsers.size(); i++) { // 채팅 전송
 							System.out.println("참여한 방의 유저들에게 참여자 정보 전송중 / 현재 " + i + "번 유저에게 전송 대기 중");
 							PrintWriter sendChat = new PrintWriter(joinUsers.get(i).socket.getOutputStream());
-							sendChat.println(joinRoomStr[1] + "님이 참여하셨습니다.\r\n");
+							sendChat.println("JOIN_USER%$%" + joinRoomStr[1]);
 							sendChat.flush();
 							System.out.println("참여한 방의 유저들에게 참여자 정보 전송중 / 현재 " + i + "번 유저까지 전송 완료 상태");
 						}
@@ -200,13 +200,9 @@ public class UserThread extends Thread {
 					ArrayList<User> userList = roomInstance.getRoomInfo(Integer.parseInt(chatStr[1])).entry;
 					for (int i = 0; i < userList.size(); i++) { // 채팅 전송
 						System.out.println("현재 " + i + "번 유저에게 채팅 전송 준비 중");
-						try {
 						PrintWriter sendChat = new PrintWriter(userList.get(i).socket.getOutputStream());
 						sendChat.println(str + "\r\n");
 						sendChat.flush();
-						} catch(Exception e) {
-							System.out.println("왜 실행이 안되는 거신대애애애애애애" + e);
-						}
 						System.out.println("현재 " + i + "번 유저에게 채팅 전송 완료");
 					}
 				}
