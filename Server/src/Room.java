@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 public class Room {
 	String roomNa = null;
-	ArrayList<String> entryList = new ArrayList();
+	ArrayList<User> entry = new ArrayList();
 	
-	public Room(String roomNa, String Leader) {
+	public Room(String roomNa, User Leader) {
 		this.roomNa = roomNa;
-		entryList.add(Leader);
+		entry.add(Leader);
 	}
 	
 	public String getRoomNa() {
@@ -16,17 +16,17 @@ public class Room {
 	}
 	
 	public ArrayList getEntryList() {
-		return entryList;
+		return entry;
 	}
 	
-	public void setAddEntry(String entryUser) {
-		entryList.add(entryUser);
+	public void AddEntry(User entryUser) {
+		entry.add(entryUser);
 	}
 	
-	public void setRemoveEntry(String entryUser) {
-		for(int i = 0; i < entryList.size(); i++) {
-			if(entryList.get(i) == entryUser) {
-				entryList.remove(i);
+	public void RemoveEntry(User entryUser) {
+		for(int i = 0; i < entry.size(); i++) {
+			if(entry.get(i) == entryUser) {
+				entry.remove(i);
 			}
 			break;
 		}
