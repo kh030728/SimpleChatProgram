@@ -20,7 +20,7 @@
         /// A dispatcher about main thread
         /// </summary>
         public Dispatcher STAthread { get; set; }
-        Thread readThread;
+        public Thread readThread;
         public int RoomNumber { get; set; }
 
         public ChatMessage chatMessage { get; private set;}
@@ -49,47 +49,58 @@
         private void ReadThread()
         {
             Console.WriteLine("ReadThread :: Start");
-            while (true)
+            try
             {
-                byte[] buff = new byte[1024];
-                int recvBytes = NetworkSystem.Instance.Stream.Read(buff, 0, buff.Length);
-                string msg = System.Text.Encoding.UTF8.GetString(buff).Trim(new char[] { '\n', '\r', '\0' });
-                Console.WriteLine("ChatWindowViewModel:: ReadThread :: A received message : {0}", msg);
-                if (msg.Contains("USERS%$%"))
+                while (true)
                 {
-                    string[] userNameArray = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
-                    for (int i = 1; i < userNameArray.Length; i++)
-                    {
-                        Console.WriteLine("ChatWindowViewModel:: ReadThread :: {0}", userNameArray[i]);
-                        Users.Add(new User(userNameArray[i]));
-                    }
-                }
-                else if (msg.Contains("SEND_CHAT%$%"))
-                {
-                    try
+                    byte[] buff = new byte[1024];
+                    int recvBytes = NetworkSystem.Instance.Stream.Read(buff, 0, buff.Length);
+                    string msg = System.Text.Encoding.UTF8.GetString(buff).Trim(new char[] { '\n', '\r', '\0' });
+                    Console.WriteLine("ChatWindowViewModel:: ReadThread :: A received message : {0}", msg);
+                    if (msg.Contains("USERS%$%"))
                     {
                         string[] userNameArray = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
-                        chatLogs.Add(new ChatLog(userNameArray[2], userNameArray[3]));
-                        STAthread.Invoke(ScrolltoBottom);
-                        Console.WriteLine("ChatWindowViewModel:: ReadThread :: To add a chat Message have been Successed");
+                        for (int i = 1; i < userNameArray.Length; i++)
+                        {
+                            Console.WriteLine("ChatWindowViewModel:: ReadThread :: {0}", userNameArray[i]);
+                            Users.Add(new User(userNameArray[i]));
+                        }
                     }
-                    catch(Exception e)
+                    else if (msg.Contains("SEND_CHAT%$%"))
                     {
-                        Console.WriteLine("ChatWindowViewModel:: ReadThread :: To add a chat Message have been Failed\n {0}",e);
+                        try
+                        {
+                            string[] userNameArray = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
+                            chatLogs.Add(new ChatLog(userNameArray[2], userNameArray[3]));
+                            STAthread.Invoke(ScrolltoBottom);
+                            Console.WriteLine("ChatWindowViewModel:: ReadThread :: To add a chat Message have been Successed");
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("ChatWindowViewModel:: ReadThread :: To add a chat Message have been Failed\n {0}", e);
+                        }
+                    }
+                    else if (msg.Contains("JOIN_USER%$%"))
+                    {
+                        string[] joinUser = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
+                        Users.Add(new User(joinUser[1]));
+                        Console.WriteLine("ChatWindowViewModel:: ReadThread :: Join User ( {0} )", joinUser[1]);
+                    }
+                    else if (msg.Contains("OUT_USER%$%"))
+                    {
+                        string[] outUser = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
+                        Users.remove(outUser[1]);
+                        Console.WriteLine("ChatWindowViewModel:: ReadThread :: Out User ( {0} )", outUser[1]);
+                    }
+                    else if(msg.Contains("OUT_ROOM_OK"))
+                    {
+                        return;
                     }
                 }
-                else if(msg.Contains("JOIN_USER%$%"))
-                {
-                    string[] joinUser = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
-                    Users.Add(new User(joinUser[1]));
-                    Console.WriteLine("ChatWindowViewModel:: ReadThread :: Join User ( {0} )",joinUser[1]);
-                }
-                else if(msg.Contains("OUT_USER%$%"))
-                {
-                    string[] outUser = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
-                    Users.remove(outUser[1]);
-                    Console.WriteLine("ChatWindowViewModel:: ReadThread :: Out User ( {0} )", outUser[1]);
-                }
+            }
+            catch
+            {
+                Console.WriteLine("ChatWindowViewModel:: ReadThread :: end");
             }
         }
         
@@ -153,7 +164,6 @@
         ~ChatWindowViewModel()
         {
             byte[] buff = new byte[1024];
-            readThread.Abort();
             buff = System.Text.Encoding.UTF8.GetBytes("REQUEST_OUT_ROOM%$%" + NetworkSystem.Instance.NickName + "\r\n");
             NetworkSystem.Instance.Stream.Write(buff, 0, buff.Length);
         }

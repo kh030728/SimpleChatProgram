@@ -2,6 +2,7 @@
 {
     using SimpleChatClient.Views;
     using System;
+    using System.Threading;
     using System.Windows;
     using System.Windows.Input;
 
@@ -38,6 +39,7 @@
 
         private void CloseWindow(object sender, RoutedEventArgs e)
         {
+            vm.readThread.Join();
             vm.ShowRoomListWindow();
             this.Close();
         }
