@@ -15,7 +15,7 @@ public class Room {
 		return roomNa;
 	}
 	
-	public ArrayList getEntryList() {
+	public ArrayList getEntry() {
 		return entry;
 	}
 	
@@ -23,9 +23,9 @@ public class Room {
 		entry.add(entryUser);
 	}
 	
-	public void RemoveEntry(String nickName) {
+	public void RemoveEntry(User user) {
 		for(int i = 0; i < entry.size(); i++) {
-			if(entry.get(i).nickName == nickName) {
+			if(entry.get(i) == user) {
 				entry.remove(i);
 			}
 			break;
