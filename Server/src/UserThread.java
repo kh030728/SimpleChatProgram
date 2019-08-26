@@ -132,7 +132,19 @@ public class UserThread extends Thread {
 					String[] joinRoomStr = str.split("\\%\\$\\%"); // [0] : 요청 메세지, [1] : 참여할 유저, [2] : 참여할 방 번호
 					System.out.println("메세지 분리 확인용 - 0 : " + joinRoomStr[0] + " 1 : " + joinRoomStr[1] + " 2 : " + joinRoomStr[2]);
 					int roomNu = Integer.parseInt(joinRoomStr[2]);  // 방 번호
+					
+					System.out.println("참여하기 전");
+					for(int i = 0; i < roomInstance.getRoomInfo(roomNu).entry.size(); i++) {
+						System.out.println("현재 확인 된 유저 " + i + " : " + roomInstance.getRoomInfo(roomNu).entry.get(i).nickName);
+					}
+					
 					roomInstance.getRoomInfo(roomNu).AddEntry(userInfo); // 방 정보에 참여 유저 넣기
+					
+					System.out.println("참여한 후");
+					for(int i = 0; i < roomInstance.getRoomInfo(roomNu).entry.size(); i++) {
+						System.out.println("현재 확인 된 유저 " + i + " : " + roomInstance.getRoomInfo(roomNu).entry.get(i).nickName);
+					}
+					
 					userInfo.roomNu = roomNu; // 유저 정보의 현재 방 번호 변경
 					Pwriter.println("FINISH_JOIN");
 					Pwriter.flush();
@@ -183,10 +195,22 @@ public class UserThread extends Thread {
 				else if (str.contains("REQUEST_OUT_ROOM%$%")) { // (나간 유저 필요없음 (수정 필요))
 					System.out.println("방 나가기 메세지 요청 수신 완료 / 수신된 메세지 : " + str);
 					String[] outRoomStr = str.split("\\%\\$\\%"); // [0] : 요청 메세지, [1] : 나간 유저
-					System.out.println("메세지 분리 확인용 - 0 : " + outRoomStr[0] + " 1 : " + userInfo.nickName);
+					System.out.println("메세지 분리 확인용 - 0 : " + outRoomStr[0]);
 					int roomNu = userInfo.roomNu;
 					userInfo.roomNu = 0;
-					roomInstance.getRoomInfo(roomNu).RemoveEntry(userInfo.nickName); // 해당 방의 유저 목록에서 나간 유저 삭제
+					
+					System.out.println("내보내기 전");
+					for(int i = 0; i < roomInstance.getRoomInfo(roomNu).entry.size(); i++) {
+						System.out.println("현재 확인 된 유저 " + i + " : " + roomInstance.getRoomInfo(roomNu).entry.get(i).nickName);
+					}
+					
+					roomInstance.getRoomInfo(roomNu).RemoveEntry(userInfo); // 해당 방의 유저 목록에서 나간 유저 삭제
+					
+					System.out.println("내보낸 후");
+					for(int i = 0; i < roomInstance.getRoomInfo(roomNu).entry.size(); i++) {
+						System.out.println("현재 확인 된 유저 " + i + " : " + roomInstance.getRoomInfo(roomNu).entry.get(i).nickName);
+					}
+					
 					Pwriter.println("OUT_ROOM_OK");
 					Pwriter.flush();
 					// 나간 유저 정보 전달
@@ -204,7 +228,7 @@ public class UserThread extends Thread {
 					else {
 						roomInstance.removeRoom(roomNu);
 					}
-					System.out.println("방 나가기 요청과 후처리 완료");
+					
 					outRoomStr = null;
 					str = null;
 				}
@@ -230,6 +254,13 @@ public class UserThread extends Thread {
 					String[] outUser = str.split("\\%\\$\\%"); //[0] : 요청 메세지, [1] : 유저 닉네임 
 					System.out.println("받은 메세지 분리 확인 - [0] : " + outUser[0] + " [1] : " + outUser[1]);
 					userInstance.removeUser(userInfo.nickName);
+					for(int i = 0; i < userInstance.getSizeInfo(); i++) {
+						if(userInstance.getUserInfo(i).nickName == userInfo.nickName) {
+							System.out.println("유저가 남아있음");
+							return;
+						}
+					}
+					System.out.println("유저를 지우는데 성공");
 				}
 				
 				// 강제 종료
