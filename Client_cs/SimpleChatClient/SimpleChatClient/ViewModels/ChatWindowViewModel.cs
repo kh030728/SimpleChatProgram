@@ -84,8 +84,13 @@
                     else if (msg.Contains("JOIN_USER%$%"))
                     {
                         string[] joinUser = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
-                        Users.Add(new User(joinUser[1]));
-                        Console.WriteLine("ChatWindowViewModel:: ReadThread :: Join User ( {0} )", joinUser[1]);
+                        if (!msg.Contains(joinUser[1]))
+                        {
+                            Users.Add(new User(joinUser[1]));
+                            Console.WriteLine("ChatWindowViewModel:: ReadThread :: Join User ( {0} )", joinUser[1]);
+                        }
+                        else
+                            Console.WriteLine("ChatWindowViewModel:: ReadThread :: This user already joined");
                     }
                     else if (msg.Contains("OUT_USER%$%"))
                     {
