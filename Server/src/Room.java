@@ -24,12 +24,7 @@ public class Room {
 	}
 	
 	public void RemoveEntry(User user) {
-		for(int i = 0; i < entry.size(); i++) {
-			if(entry.get(i) == user) {
-				entry.remove(i);
-			}
-			break;
-		}
+		entry.remove(user);
 	}
 	
 }
