@@ -20,7 +20,10 @@
                 <RowDefinition Height="4*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Button Grid.Row="0" Width="24" HorizontalAlignment="Right" VerticalContentAlignment="Center" Content="X" Click="CloseWindow"/>
+            <StackPanel Orientation="Horizontal">
+                <Rectangle MouseLeftButtonDown="StackPanel_MouseLeftButtonDown" Fill="#FF1E1E2C" Width="577" Height="18"></Rectangle>
+                <Button Grid.Row="0" Width="24" Height="18" HorizontalAlignment="Right" VerticalContentAlignment="Center" Content="X" Click="CloseWindow"/>
+            </StackPanel>
             <Grid
                 Grid.Row="1">
                 <Grid

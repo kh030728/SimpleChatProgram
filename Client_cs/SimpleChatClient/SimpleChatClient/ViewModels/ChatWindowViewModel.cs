@@ -72,7 +72,7 @@
                         try
                         {
                             string[] userNameArray = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
-                            chatLogs.Add(new ChatLog(userNameArray[2], userNameArray[3]));
+                            chatLogs.Add(new ChatLog(userNameArray[1], userNameArray[2]));
                             STAthread.Invoke(ScrolltoBottom);
                             Console.WriteLine("ChatWindowViewModel:: ReadThread :: To add a chat Message have been Successed");
                         }
@@ -135,7 +135,7 @@
             }
             try
             {
-                buff = System.Text.Encoding.UTF8.GetBytes("SEND_CHAT%$%"+RoomNumber+"%$%"+NetworkSystem.Instance.NickName+"%$%"+chatMessage.Message+"\r\n");
+                buff = System.Text.Encoding.UTF8.GetBytes("SEND_CHAT%$%"+chatMessage.Message+"\r\n");
                 NetworkSystem.Instance.Stream.Write(buff, 0, buff.Length);
                 Console.WriteLine("A sending process have been completed.");
                 ChatMessageClear();

@@ -49,5 +49,10 @@
             NetworkSystem.Instance.Stream.Write(buff, 0, buff.Length);
             Console.WriteLine("Click close window");
         }
+
+        private void StackPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            this.DragMove();
+        }
     }
 }
