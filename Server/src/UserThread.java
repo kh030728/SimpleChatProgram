@@ -110,7 +110,7 @@ public class UserThread extends Thread {
 					for (int i = 0; i < userInstance.getSizeInfo(); i++) { // 방 생성 후 갱신된 방 정보 재 전송
 						System.out.println("생성 후 갱신된 방 정보 전송 준비중");
 						PrintWriter NotifyAddRoom = new PrintWriter(userInstance.getUserInfo(i).socket.getOutputStream());
-						NotifyAddRoom.println("NOTIFY_ADD_ROOM%$%" + addRoomNu + "%$%" + createRoomStr[1] + "%$%" + roomInstance.getRoomInfo(addRoomNu).entry.size() +"\r\n");
+						NotifyAddRoom.println("NOTIFY_ADD_ROOM%$%" + (addRoomNu+1) + "%$%" + createRoomStr[1] + "%$%" + roomInstance.getRoomInfo(addRoomNu).entry.size() +"\r\n");
 						NotifyAddRoom.flush();
 						System.out.println("갱신된 방 정보 전송 완료");
 					}
@@ -162,7 +162,7 @@ public class UserThread extends Thread {
 						for (int i = 0; i < userInstance.getSizeInfo(); i++) {
 							System.out.println(i + "번 유저에게 전송 준비 중");
 							PrintWriter sendChangePeople = new PrintWriter(userInstance.getUserInfo(i).socket.getOutputStream());
-							sendChangePeople.println("NOTIFY_CHAGE_ROOM%$%" + roomNu + "%$%" + roomInstance.getRoomInfo(roomNu).entry.size());
+							sendChangePeople.println("NOTIFY_CHAGE_ROOM%$%" + (roomNu+1) + "%$%" + roomInstance.getRoomInfo(roomNu).entry.size());
 							sendChangePeople.flush();
 							System.out.println(i + "번 유저까지 전송 완료");
 						}
@@ -196,6 +196,13 @@ public class UserThread extends Thread {
 					}
 					else {
 						roomInstance.removeRoom(roomNu);
+						for (int i = 0; i < userInstance.getSizeInfo(); i++) {
+							System.out.println(i + "번 유저에게 전송 준비 중");
+							PrintWriter sendChangePeople = new PrintWriter(userInstance.getUserInfo(i).socket.getOutputStream());
+							sendChangePeople.println("NOTIFY_REMOVE_ROOM%$%" + (roomNu+1));
+							sendChangePeople.flush();
+							System.out.println(i + "번 유저까지 전송 완료");
+						}
 					}
 					
 					outRoomStr = null;
@@ -204,7 +211,6 @@ public class UserThread extends Thread {
 
 				// 채팅 전송
 				else if (str.contains("SEND_CHAT%$%")) {
-					
 					System.out.println("채팅 전송 요청 메세지 / 받은 메세지 : " + str);
 					String[] chatStr = str.split("\\%\\$\\%"); // [0] : 요청 메세지, [1] : 방 번호, [2] : 유저 닉네임, [3] : 채팅 내용
 					System.out.println("받은 메세지 분리 확인 - [0] : " + chatStr[0] + " / [1] : " + chatStr[1] + " / [2] : " + chatStr[2] + " / [3] : " + chatStr[3]);
