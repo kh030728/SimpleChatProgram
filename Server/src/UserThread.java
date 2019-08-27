@@ -120,7 +120,7 @@ public class UserThread extends Thread {
 				}
 
 				// 방 참여
-				else if (str.contains("REQUEST_JOIN_ROOM%$%")) { // (참여할 유저 필요 없음(수정 필요))
+				else if (str.contains("REQUEST_JOIN_ROOM%$%")) {
 					System.out.println("방 참여 메세지 수신 완료 / 수신 메세지 : " + str);
 					String[] joinRoomStr = str.split("\\%\\$\\%"); // [0] : 요청 메세지, [1] : 참여할 방 번호
 					System.out.println("메세지 분리 확인용 - 0 : " + joinRoomStr[0] + " 1 : " + joinRoomStr[1]);
@@ -173,10 +173,8 @@ public class UserThread extends Thread {
 				}
 
 				// 방 나가기
-				else if (str.contains("REQUEST_OUT_ROOM%$%")) {
+				else if (str.contains("REQUEST_OUT_ROOM")) {
 					System.out.println("방 나가기 메세지 요청 수신 완료 / 수신된 메세지 : " + str);
-					String[] outRoomStr = str.split("\\%\\$\\%"); // [0] : 요청 메세지
-					System.out.println("메세지 분리 확인용 - 0 : " + outRoomStr[0]);
 					int roomNu = userInfo.roomNu;
 					userInfo.roomNu = 0;			
 					roomInstance.getRoomInfo(roomNu).RemoveEntry(userInfo); // 해당 방의 유저 목록에서 나간 유저 삭제
@@ -204,31 +202,27 @@ public class UserThread extends Thread {
 							System.out.println(i + "번 유저까지 전송 완료");
 						}
 					}
-					
-					outRoomStr = null;
 					str = null;
 				}
 
 				// 채팅 전송
 				else if (str.contains("SEND_CHAT%$%")) {
 					System.out.println("채팅 전송 요청 메세지 / 받은 메세지 : " + str);
-					String[] chatStr = str.split("\\%\\$\\%"); // [0] : 요청 메세지, [1] : 방 번호, [2] : 유저 닉네임, [3] : 채팅 내용
-					System.out.println("받은 메세지 분리 확인 - [0] : " + chatStr[0] + " / [1] : " + chatStr[1] + " / [2] : " + chatStr[2] + " / [3] : " + chatStr[3]);
+					String[] chatStr = str.split("\\%\\$\\%"); // [0] : 요청 메세지, [1] : 채팅 내용
+					System.out.println("받은 메세지 분리 확인 - [0] : " + chatStr[0] + " / [1] : " + chatStr[1]);
 					ArrayList<User> userList = roomInstance.getRoomInfo(Integer.parseInt(chatStr[1])).entry;
 					for (int i = 0; i < userList.size(); i++) { // 채팅 전송
 						System.out.println("현재 " + i + "번 유저에게 채팅 전송 준비 중");
 						PrintWriter sendChat = new PrintWriter(userList.get(i).socket.getOutputStream());
-						sendChat.println(str + "\r\n");
+						sendChat.println("SEND_CHAT%$%" + userInfo.nickName + "%$%" + chatStr[1] + "\r\n");
 						sendChat.flush();
 						System.out.println("현재 " + i + "번 유저에게 채팅 전송 완료");
 					}
 				}
 				
 				// 프로그램 종료
-				else if(str.contains("REQUEST_OUT_USER%$%")) {
+				else if(str.contains("REQUEST_OUT_USER")) {
 					System.out.println("채팅 전송 요청 메세지 / 받은 메세지 : " + str);
-					String[] outUser = str.split("\\%\\$\\%"); //[0] : 요청 메세지
-					System.out.println("받은 메세지 분리 확인 - [0] : " + outUser[0]);
 					userInstance.removeUser(userInfo.nickName);
 					for(int i = 0; i < userInstance.getSizeInfo(); i++) {
 						if(userInstance.getUserInfo(i).nickName == userInfo.nickName) {
@@ -251,7 +245,15 @@ public class UserThread extends Thread {
 							}
 						}
 						else {
+							int roomNu = userInfo.roomNu; 
 							roomInstance.removeRoom(userInfo.roomNu);
+							for (int i = 0; i < userInstance.getSizeInfo(); i++) {
+								System.out.println(i + "번 유저에게 전송 준비 중");
+								PrintWriter sendChangePeople = new PrintWriter(userInstance.getUserInfo(i).socket.getOutputStream());
+								sendChangePeople.println("NOTIFY_REMOVE_ROOM%$%" + (roomNu+1));
+								sendChangePeople.flush();
+								System.out.println(i + "번 유저까지 전송 완료");
+							}
 						}
 					}
 					userInstance.removeUser(userInfo.nickName);
