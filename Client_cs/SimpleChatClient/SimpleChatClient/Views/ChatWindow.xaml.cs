@@ -45,7 +45,7 @@
         private void CloseWindow(object sender, RoutedEventArgs e)
         {
             byte[] buff = new byte[1024];
-            buff = System.Text.Encoding.UTF8.GetBytes("REQUEST_OUT_ROOM%$%" + NetworkSystem.Instance.NickName + "\r\n");
+            buff = System.Text.Encoding.UTF8.GetBytes("REQUEST_OUT_ROOM\r\n");
             NetworkSystem.Instance.Stream.Write(buff, 0, buff.Length);
             Console.WriteLine("Click close window");
         }

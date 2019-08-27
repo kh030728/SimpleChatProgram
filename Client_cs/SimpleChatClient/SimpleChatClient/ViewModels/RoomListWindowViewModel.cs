@@ -250,7 +250,7 @@
             try
             {
                 byte[] buf = new byte[1024];
-                buf = System.Text.Encoding.UTF8.GetBytes("REQUEST_CREATE_ROOM%$%" + roomName + "%$%" + NickName + "\r\n");
+                buf = System.Text.Encoding.UTF8.GetBytes("REQUEST_CREATE_ROOM%$%" + roomName + "\r\n");
                 networkSystem.Stream.Write(buf, 0, buf.Length);
                 Console.WriteLine("a message was send"); 
             }
@@ -267,7 +267,7 @@
         ~RoomListWindowViewModel()
         {
             byte[] buff = new byte[1024];
-            buff = System.Text.Encoding.UTF8.GetBytes("REQUEST_OUT_USER%$%" + NetworkSystem.Instance.NickName + "\r\n");
+            buff = System.Text.Encoding.UTF8.GetBytes("REQUEST_OUT_USER" + "\r\n");
             NetworkSystem.Instance.Stream.Write(buff, 0, buff.Length);
         }
 
@@ -286,8 +286,8 @@
             }
             NetworkSystem ns = NetworkSystem.Instance;
             byte[] buff = new byte[1024];
-            Console.WriteLine("Send Message : REQUEST_JOIN_ROOM%$%" + ns.NickName + "%$%" + SelectedRoom.Number);
-            buff = System.Text.Encoding.UTF8.GetBytes("REQUEST_JOIN_ROOM%$%" + ns.NickName + "%$%" + SelectedRoom.Number+"\r\n");
+            Console.WriteLine("Send Message : REQUEST_JOIN_ROOM%$%"+ SelectedRoom.Number);
+            buff = System.Text.Encoding.UTF8.GetBytes("REQUEST_JOIN_ROOM%$%" + SelectedRoom.Number+"\r\n");
             try
             {
                 ns.Stream.Write(buff, 0, buff.Length);
