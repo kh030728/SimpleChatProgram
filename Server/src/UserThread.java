@@ -161,7 +161,7 @@ public class UserThread extends Thread {
 						System.out.println("전체 유저에게 인원수가 변경된 방 알림");
 						for (int i = 0; i < userInstance.getSizeInfo(); i++) {
 							System.out.println(i + "번 유저에게 전송 준비 중");
-							if(userInstance.getUserInfo(i).roomNu != roomNu) {
+							if(userInstance.getUserInfo(i).roomNu == 0) {
 								PrintWriter sendChangePeople = new PrintWriter(userInstance.getUserInfo(i).socket.getOutputStream());
 								sendChangePeople.println("NOTIFY_CHANGE_ROOM%$%" + (roomNu+1) + "%$%" + roomInstance.getRoomInfo(roomNu).entry.size());
 								sendChangePeople.flush();
@@ -170,6 +170,7 @@ public class UserThread extends Thread {
 						}
 					}
 					System.out.println("방 참여와 후처리 완료");
+					System.out.println("참여한 유저의 정보 : 현재 방 번호 - " + userInfo.roomNu + "닉네임 - " + userInfo.nickName);
 					joinRoomStr = null;
 					str = null;
 				}
@@ -177,8 +178,9 @@ public class UserThread extends Thread {
 				// 방 나가기
 				else if (str.contains("REQUEST_OUT_ROOM")) {
 					System.out.println("방 나가기 메세지 요청 수신 완료 / 수신된 메세지 : " + str);
+					System.out.println("나가려는 유저 정보 : 현재 방 번호 - " + userInfo.roomNu + "닉네임 - " + userInfo.nickName);
 					int roomNu = userInfo.roomNu;
-					userInfo.roomNu = 0;			
+					userInfo.roomNu = 0;		
 					roomInstance.getRoomInfo(roomNu).RemoveEntry(userInfo); // 해당 방의 유저 목록에서 나간 유저 삭제
 					Pwriter.println("OUT_ROOM_OK");
 					Pwriter.flush();
