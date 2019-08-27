@@ -148,7 +148,7 @@ public class UserThread extends Thread {
 						
 						// 참여한 방에 참여자 정보 전달
 						ArrayList<User> joinUsers = roomInstance.getRoomInfo(roomNu).entry; // 참여한 방의 유저 리스트
-						System.out.println("참여한 방의 갱신된 유저 목록 : " + joinUsers);
+						System.out.println("참여한 방의 갱신된 유저 목록 : " + joinUsers.get(roomNu).nickName);
 						for (int i = 0; i < joinUsers.size(); i++) { // 채팅 전송
 							System.out.println("참여한 방의 유저들에게 참여자 정보 전송중 / 현재 " + i + "번 유저에게 전송 대기 중");
 							PrintWriter sendChat = new PrintWriter(joinUsers.get(i).socket.getOutputStream());
@@ -161,9 +161,11 @@ public class UserThread extends Thread {
 						System.out.println("전체 유저에게 인원수가 변경된 방 알림");
 						for (int i = 0; i < userInstance.getSizeInfo(); i++) {
 							System.out.println(i + "번 유저에게 전송 준비 중");
-							PrintWriter sendChangePeople = new PrintWriter(userInstance.getUserInfo(i).socket.getOutputStream());
-							sendChangePeople.println("NOTIFY_CHAGE_ROOM%$%" + (roomNu+1) + "%$%" + roomInstance.getRoomInfo(roomNu).entry.size());
-							sendChangePeople.flush();
+							if(userInstance.getUserInfo(i).roomNu != roomNu) {
+								PrintWriter sendChangePeople = new PrintWriter(userInstance.getUserInfo(i).socket.getOutputStream());
+								sendChangePeople.println("NOTIFY_CHANGE_ROOM%$%" + (roomNu+1) + "%$%" + roomInstance.getRoomInfo(roomNu).entry.size());
+								sendChangePeople.flush();
+							}
 							System.out.println(i + "번 유저까지 전송 완료");
 						}
 					}
