@@ -3,6 +3,7 @@ package chattingProgram;
 import java.util.ArrayList;
 
 public class Room {
+	int roomNu = 0;
 	String roomNa = null;
 	ArrayList<User> entry = new ArrayList();
 	
