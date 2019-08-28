@@ -36,7 +36,7 @@ public class RoomsInfo {
 		for(int i = 0; i < roomInfo.size(); i++) {
 			if(roomInfo.get(i).roomNa == roomName) {
 				roomNum = i;
-				roomInfo.get(i).roomNu = i;
+				roomInfo.get(i).roomNu = i+1;
 				break;
 			}
 		}

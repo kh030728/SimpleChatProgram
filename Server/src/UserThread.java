@@ -124,9 +124,9 @@ public class UserThread extends Thread {
 					System.out.println("방 참여 메세지 수신 완료 / 수신 메세지 : " + str);
 					String[] joinRoomStr = str.split("\\%\\$\\%"); // [0] : 요청 메세지, [1] : 참여할 방 번호
 					System.out.println("메세지 분리 확인용 - 0 : " + joinRoomStr[0] + " 1 : " + joinRoomStr[1]);
-					int roomNu = Integer.parseInt(joinRoomStr[1])-1;  // 방 번호					
+					int roomNu = Integer.parseInt(joinRoomStr[1])-1;  // 해당 방이 위치한 리스트의 번호					
 					roomInstance.getRoomInfo(roomNu).AddEntry(userInfo); // 방 정보에 참여 유저 넣기
-					userInfo.roomNu = roomNu; // 유저 정보의 현재 방 번호 변경
+					userInfo.roomNu = roomNu+1; // 유저 정보의 현재 방 번호 변경
 					Pwriter.println("FINISH_JOIN");
 					Pwriter.flush();
 					
@@ -179,7 +179,7 @@ public class UserThread extends Thread {
 				else if (str.contains("REQUEST_OUT_ROOM")) {
 					System.out.println("방 나가기 메세지 요청 수신 완료 / 수신된 메세지 : " + str);
 					System.out.println("나가려는 유저 정보 : 현재 방 번호 - " + userInfo.roomNu + "닉네임 - " + userInfo.nickName);
-					int roomNu = userInfo.roomNu;
+					int roomNu = userInfo.roomNu-1;
 					userInfo.roomNu = 0;		
 					roomInstance.getRoomInfo(roomNu).RemoveEntry(userInfo); // 해당 방의 유저 목록에서 나간 유저 삭제
 					Pwriter.println("OUT_ROOM_OK");
@@ -196,7 +196,7 @@ public class UserThread extends Thread {
 							System.out.println(i + "번 유저까지 전송 완료");
 						}
 					}
-					else {
+					else { //(방에 참가한 유저들에게 없어진 방을 알릴지 의논 필요 / 필요에 따라 수정 요함)
 						roomInstance.removeRoom(roomNu);
 						for (int i = 0; i < userInstance.getSizeInfo(); i++) {
 							System.out.println(i + "번 유저에게 전송 준비 중");
@@ -214,7 +214,7 @@ public class UserThread extends Thread {
 					System.out.println("채팅 전송 요청 메세지 / 받은 메세지 : " + str);
 					String[] chatStr = str.split("\\%\\$\\%"); // [0] : 요청 메세지, [1] : 채팅 내용
 					System.out.println("받은 메세지 분리 확인 - [0] : " + chatStr[0] + " / [1] : " + chatStr[1]);
-					ArrayList<User> userList = roomInstance.getRoomInfo(userInfo.roomNu).entry;
+					ArrayList<User> userList = roomInstance.getRoomInfo(userInfo.roomNu-1).entry;
 					for (int i = 0; i < userList.size(); i++) { // 채팅 전송
 						System.out.println("현재 " + i + "번 유저에게 채팅 전송 준비 중");
 						PrintWriter sendChat = new PrintWriter(userList.get(i).socket.getOutputStream());
@@ -240,7 +240,7 @@ public class UserThread extends Thread {
 				// 강제 종료
 				else if(socket == null) {
 					if(userInfo.roomNu != 0) {
-						if(roomInstance.getRoomInfo(userInfo.roomNu).entry != null) {
+						if(roomInstance.getRoomInfo(userInfo.roomNu-1).entry != null) {
 							ArrayList<User> roomUser = roomInstance.getRoomInfo(userInfo.roomNu).entry;
 							for(int i = 0; i < roomUser.size(); i++) {
 								PrintWriter notifyOutRoom = new PrintWriter(roomUser.get(i).socket.getOutputStream());
@@ -254,7 +254,7 @@ public class UserThread extends Thread {
 							for (int i = 0; i < userInstance.getSizeInfo(); i++) {
 								System.out.println(i + "번 유저에게 전송 준비 중");
 								PrintWriter sendChangePeople = new PrintWriter(userInstance.getUserInfo(i).socket.getOutputStream());
-								sendChangePeople.println("NOTIFY_REMOVE_ROOM%$%" + (roomNu+1));
+								sendChangePeople.println("NOTIFY_REMOVE_ROOM%$%" + (roomNu-1));
 								sendChangePeople.flush();
 								System.out.println(i + "번 유저까지 전송 완료");
 							}
