@@ -3,14 +3,17 @@
     using System;
     using System.Windows.Input;
 
-    internal class ChatButton : ICommand
+    class SendChatButtonCommand : ICommand
     {
         private ViewModels.ChatWindowViewModel _ViewModel;
-        public ChatButton(ViewModels.ChatWindowViewModel viewModel)
+        public SendChatButtonCommand(ViewModels.ChatWindowViewModel viewModel)
         {
             _ViewModel = viewModel;
         }
-    public event EventHandler CanExecuteChanged
+
+
+        #region ICommand member
+        public event EventHandler CanExecuteChanged
         {
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
@@ -26,5 +29,6 @@
         {
             _ViewModel.Chat();
         }
+        #endregion
     }
 }

@@ -78,13 +78,21 @@
                     Margin="5"
                     Grid.Column="0"
                     Text ="{Binding chatMessage.Message, UpdateSourceTrigger=PropertyChanged}"
-                    KeyDown="ChatPressEnter"/>
-                <Button
+                    >
+                    <TextBox.InputBindings>
+                        <KeyBinding
+                            Key="Enter"
+                            Command="{Binding SendChatKeyDownCommand}"
+                            CommandParameter="{Binding Path=Text, RelativeSource={RelativeSource AncestorType={x:Type TextBox}}}"/>
+                    </TextBox.InputBindings>
+                </TextBox>
+                
+                    <Button
                     Content="전송"
                     Margin="5"
                     Grid.Column="1"
                     Foreground="WhiteSmoke"
-                    Command="{Binding ChatButton}"
+                    Command="{Binding SendChatButtonCommand}"
                     Name="sendButton">
                     <Button.Background>
                         <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>

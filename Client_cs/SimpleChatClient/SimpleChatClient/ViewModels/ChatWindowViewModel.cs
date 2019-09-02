@@ -34,7 +34,8 @@
         /// <summary>
         /// The Command class for ChatButton
         /// </summary>
-        public ICommand ChatButton { get; private set; }
+        public ICommand SendChatButtonCommand { get; private set; }
+        public ICommand SendChatKeyDownCommand { get; private set; }
 
         #region Actions
         public Action<string, string> ChatLogAdd { get; set; }
@@ -154,7 +155,8 @@
             Console.WriteLine("ChatWindowViewModel :: start");
             #region Initializes variables
             // Initializes the command for chatButton.
-            ChatButton = new SimpleChatClient.Commands.ChatButton(this);
+            SendChatButtonCommand = new SimpleChatClient.Commands.SendChatButtonCommand(this);
+            SendChatKeyDownCommand = new SimpleChatClient.Commands.SendChatKeyDownCommand(this);
             chatMessage = new ChatMessage();
             chatLogs = new ChatLogs();
             _Users = new ChatUsers();
