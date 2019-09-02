@@ -96,7 +96,7 @@ public class UserThread extends Thread {
 					roomInstance.addRoom(room);
 					int addRoomNu = roomInstance.getRoomNum(createRoomStr[1]); // 생성한 방의 방 번호 찾기
 					roomInstance.sort(); // 방 번호로 방 목록 정렬
-					userInfo.roomNu = addRoomNu;
+					userInfo.roomNu = addRoomNu+1;
 					System.out.println("생성한 방 번호 : " + addRoomNu);
 					Pwriter.println("SUCCESS_CREATE_ROOM%$%" + addRoomNu);
 					Pwriter.flush();
@@ -126,7 +126,9 @@ public class UserThread extends Thread {
 					System.out.println("메세지 분리 확인용 - 0 : " + joinRoomStr[0] + " 1 : " + joinRoomStr[1]);
 					int roomNu = Integer.parseInt(joinRoomStr[1])-1;  // 해당 방이 위치한 리스트의 번호					
 					roomInstance.getRoomInfo(roomNu).AddEntry(userInfo); // 방 정보에 참여 유저 넣기
+					System.out.println("참여 처리 전 유저 정보의 방 번호 : " + userInfo.roomNu);
 					userInfo.roomNu = roomNu+1; // 유저 정보의 현재 방 번호 변경
+					System.out.println("참여 처리 후 유저 정보의 방 번호 : " + userInfo.roomNu);
 					Pwriter.println("FINISH_JOIN");
 					Pwriter.flush();
 					
@@ -180,7 +182,9 @@ public class UserThread extends Thread {
 					System.out.println("방 나가기 메세지 요청 수신 완료 / 수신된 메세지 : " + str);
 					System.out.println("나가려는 유저 정보 : 현재 방 번호 - " + userInfo.roomNu + "닉네임 - " + userInfo.nickName);
 					int roomNu = userInfo.roomNu-1;
-					userInfo.roomNu = 0;		
+					System.out.println("현재 유저 정보의 방 번호 : " + userInfo.roomNu);
+					userInfo.roomNu = 0;
+					System.out.println("나가기 처리 후 유저 정보의 방 번호 : " + userInfo.roomNu);
 					roomInstance.getRoomInfo(roomNu).RemoveEntry(userInfo); // 해당 방의 유저 목록에서 나간 유저 삭제
 					Pwriter.println("OUT_ROOM_OK");
 					Pwriter.flush();
