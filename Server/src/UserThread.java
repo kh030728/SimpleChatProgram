@@ -126,7 +126,9 @@ public class UserThread extends Thread {
 					System.out.println("메세지 분리 확인용 - 0 : " + joinRoomStr[0] + " 1 : " + joinRoomStr[1]);
 					int roomNu = Integer.parseInt(joinRoomStr[1])-1;  // 해당 방이 위치한 리스트의 번호					
 					roomInstance.getRoomInfo(roomNu).AddEntry(userInfo); // 방 정보에 참여 유저 넣기
-					userInfo.roomNu = roomNu+1; // 유저 정보의 현재 방 번호 변경
+					System.out.println("참여 처리 전 해당 유저의 방 번호 : " + userInfo.roomNu);
+					userInfo.roomNu = Integer.parseInt(joinRoomStr[1]); // 유저 정보의 현재 방 번호 변경
+					System.out.println("참여 처리 후 해당 유저의 방 번호 : " + userInfo.roomNu);
 					Pwriter.println("FINISH_JOIN");
 					Pwriter.flush();
 					
