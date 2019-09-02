@@ -126,9 +126,7 @@ public class UserThread extends Thread {
 					System.out.println("메세지 분리 확인용 - 0 : " + joinRoomStr[0] + " 1 : " + joinRoomStr[1]);
 					int roomNu = Integer.parseInt(joinRoomStr[1])-1;  // 해당 방이 위치한 리스트의 번호					
 					roomInstance.getRoomInfo(roomNu).AddEntry(userInfo); // 방 정보에 참여 유저 넣기
-					System.out.println("참여 처리 전 유저 정보의 방 번호 : " + userInfo.roomNu);
 					userInfo.roomNu = roomNu+1; // 유저 정보의 현재 방 번호 변경
-					System.out.println("참여 처리 후 유저 정보의 방 번호 : " + userInfo.roomNu);
 					Pwriter.println("FINISH_JOIN");
 					Pwriter.flush();
 					
@@ -218,7 +216,7 @@ public class UserThread extends Thread {
 					System.out.println("채팅 전송 요청 메세지 / 받은 메세지 : " + str);
 					String[] chatStr = str.split("\\%\\$\\%"); // [0] : 요청 메세지, [1] : 채팅 내용
 					System.out.println("받은 메세지 분리 확인 - [0] : " + chatStr[0] + " / [1] : " + chatStr[1]);
-					ArrayList<User> userList = roomInstance.getRoomInfo(userInfo.roomNu).entry;
+					ArrayList<User> userList = roomInstance.getRoomInfo(userInfo.roomNu-1).entry;
 					for (int i = 0; i < userList.size(); i++) { // 채팅 전송
 						System.out.println("현재 " + i + "번 유저에게 채팅 전송 준비 중");
 						PrintWriter sendChat = new PrintWriter(userList.get(i).socket.getOutputStream());
