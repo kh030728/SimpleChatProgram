@@ -56,6 +56,7 @@
                 while (true)
                 {
                     byte[] buff = new byte[1024];
+                    Console.WriteLine("ChatWindowViewModel:: ReadThread :: 대기중...");
                     int recvBytes = NetworkSystem.Instance.Stream.Read(buff, 0, buff.Length);
                     string msg = System.Text.Encoding.UTF8.GetString(buff).Trim(new char[] { '\n', '\r', '\0' });
                     Console.WriteLine("ChatWindowViewModel:: ReadThread :: A received message : {0}", msg);
@@ -85,14 +86,18 @@
                     else if (msg.Contains("JOIN_USER%$%"))
                     {
                         string[] joinUser = msg.Split(new string[] { "%$%" }, StringSplitOptions.RemoveEmptyEntries);
+                        bool _flag = false;
                         for(int i = 0; i < Users.Count; i++)
                         {
                             if (Users[i].NickName == joinUser[1])
                             {
                                 Console.WriteLine("ChatWindowViewModel:: ReadThread :: This user already joined");
-                                return;
+                                _flag = true;
+                                break;
                             }
                         }
+                        if (_flag == true)
+                            continue;
                         Users.Add(new User(joinUser[1]));
                         Console.WriteLine("ChatWindowViewModel:: ReadThread :: Join User ( {0} )", joinUser[1]);
                     }
