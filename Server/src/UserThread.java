@@ -218,7 +218,8 @@ public class UserThread extends Thread {
 					System.out.println("채팅 전송 요청 메세지 / 받은 메세지 : " + str);
 					String[] chatStr = str.split("\\%\\$\\%"); // [0] : 요청 메세지, [1] : 채팅 내용
 					System.out.println("받은 메세지 분리 확인 - [0] : " + chatStr[0] + " / [1] : " + chatStr[1]);
-					ArrayList<User> userList = roomInstance.getRoomInfo(userInfo.roomNu-1).entry;
+					ArrayList<User> userList = roomInstance.getRoomInfo((userInfo.roomNu)-1).entry;
+					System.out.println("현재 유저 수 : " + userList.size());
 					for (int i = 0; i < userList.size(); i++) { // 채팅 전송
 						System.out.println("현재 " + i + "번 유저에게 채팅 전송 준비 중");
 						PrintWriter sendChat = new PrintWriter(userList.get(i).socket.getOutputStream());
