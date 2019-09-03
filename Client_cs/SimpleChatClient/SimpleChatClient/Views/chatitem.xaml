@@ -8,10 +8,10 @@
 
     <StackPanel>
         <Border Background="GhostWhite" CornerRadius="15 0 0 0">
-            <TextBlock Margin="10 5 10 0" x:Name="chatItem_NickName" Text="{Binding NickName}" FontSize="12" TextWrapping="Wrap"/>
+            <TextBlock Margin="10 5 10 0" x:Name="chatItem_NickName" Text="{Binding NickName}" FontSize="8" TextWrapping="Wrap"/>
         </Border>
         <Border Background="#FF01E8FF" CornerRadius="0 0 15 0">
-            <TextBlock Margin="10 0 10 5" x:Name="chatItem_Message" Text="{Binding Message}" FontSize="18" TextWrapping="Wrap"/>
+            <TextBlock Margin="10 0 10 5" x:Name="chatItem_Message" Text="{Binding Message}" FontSize="12" TextWrapping="Wrap"/>
         </Border>
     </StackPanel>
 </UserControl>

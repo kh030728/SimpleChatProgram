@@ -5,37 +5,41 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SimpleChatClient"
         mc:Ignorable="d"
-        Title="ChatWindow" Height="450" Width="600"
+        Title="ChatWindow" Height="450" Width="450"
         ResizeMode="NoResize"
         WindowStyle="None" WindowStartupLocation="CenterScreen">
     <Border
         Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}">
         <Grid
-            Background="White">
+            Background="#FF2F2F47">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="18"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition Height="4*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal">
-                <Rectangle MouseLeftButtonDown="StackPanel_MouseLeftButtonDown" Fill="#FF1E1E2C" Width="577" Height="18"></Rectangle>
-                <Button Grid.Row="0" Width="24" Height="18" HorizontalAlignment="Right" VerticalContentAlignment="Center" Content="X" Click="CloseWindow"/>
+                <Rectangle MouseLeftButtonDown="StackPanel_MouseLeftButtonDown" Fill="#FF1E1E2C" Width="427" Height="30"></Rectangle>
+                <Button Grid.Row="0" Width="24" Height="30" HorizontalAlignment="Right" VerticalContentAlignment="Center" Content="X" Click="CloseWindow" Foreground="White"
+                        Background="#00F0F8FF" BorderBrush="#00F0F8FF"
+                        />
             </StackPanel>
             <Grid
                 Grid.Row="1">
                 <Grid
-                    Margin="0 0 0 10">
+                    Margin="10">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <ScrollViewer
                         Grid.Column="0"
                         Name="chatScroll">
-                        <ItemsControl x:Name="chatStack" ItemsSource="{Binding chatLogs}">
+                        <ItemsControl x:Name="chatStack" 
+                                      ItemsSource="{Binding chatLogs}"
+                                      >
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel Orientation="Vertical" />
@@ -58,10 +62,12 @@
                     <ListView
                         Grid.Column="1"
                         Name="sv_Userlist"
-                        ItemsSource="{Binding Users}">
+                        ItemsSource="{Binding Users}"
+                        Margin="10 0 10 0"
+                        Background="#FF58587C">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="이름" Width ="130" DisplayMemberBinding="{Binding NickName}"/>
+                                <GridViewColumn Header="이름" Width ="120" DisplayMemberBinding="{Binding NickName}"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -75,9 +81,11 @@
                 </Grid.ColumnDefinitions>
                 <TextBox
                     Name="ChatMessage_TextBox"
-                    Margin="5"
+                    Margin="5 10 5 10"
                     Grid.Column="0"
                     Text ="{Binding chatMessage.Message, UpdateSourceTrigger=PropertyChanged}"
+                    Background="#FF58587C"
+                    Foreground="White"
                     >
                     <TextBox.InputBindings>
                         <KeyBinding
@@ -89,7 +97,7 @@
                 
                     <Button
                     Content="전송"
-                    Margin="5"
+                    Margin="5 10 20 10"
                     Grid.Column="1"
                     Foreground="WhiteSmoke"
                     Command="{Binding SendChatButtonCommand}"
