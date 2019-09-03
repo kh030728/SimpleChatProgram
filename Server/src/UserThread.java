@@ -200,14 +200,16 @@ public class UserThread extends Thread {
 							System.out.println(i + "번 유저까지 전송 완료");
 						}
 					}
-					else { //(방에 참가한 유저들에게 없어진 방을 알릴지 의논 필요 / 필요에 따라 수정 요함)
+					else {
 						roomInstance.removeRoom(roomNu);
 						for (int i = 0; i < userInstance.getSizeInfo(); i++) {
-							System.out.println(i + "번 유저에게 전송 준비 중");
-							PrintWriter sendChangePeople = new PrintWriter(userInstance.getUserInfo(i).socket.getOutputStream());
-							sendChangePeople.println("NOTIFY_REMOVE_ROOM%$%" + (roomNu+1));
-							sendChangePeople.flush();
-							System.out.println(i + "번 유저까지 전송 완료");
+							if(userInstance.getUserInfo(i).roomNu != 0) {
+								System.out.println(i + "번 유저에게 전송 준비 중");
+								PrintWriter sendChangePeople = new PrintWriter(userInstance.getUserInfo(i).socket.getOutputStream());
+								sendChangePeople.println("NOTIFY_REMOVE_ROOM%$%" + userInfo.roomNu);
+								sendChangePeople.flush();
+								System.out.println(i + "번 유저까지 전송 완료");
+							}
 						}
 					}
 					str = null;
@@ -247,28 +249,7 @@ public class UserThread extends Thread {
 				
 				// 강제 종료
 				else if(socket == null) {
-					if(userInfo.roomNu != 0) {
-						if(roomInstance.getRoomInfo(userInfo.roomNu-1).entry != null) {
-							ArrayList<User> roomUser = roomInstance.getRoomInfo(userInfo.roomNu).entry;
-							for(int i = 0; i < roomUser.size(); i++) {
-								PrintWriter notifyOutRoom = new PrintWriter(roomUser.get(i).socket.getOutputStream());
-								notifyOutRoom.println("OUT_USER%$%" + userInfo.nickName);
-								notifyOutRoom.flush();
-							}
-						}
-						else {
-							int roomNu = userInfo.roomNu; 
-							roomInstance.removeRoom(userInfo.roomNu);
-							for (int i = 0; i < userInstance.getSizeInfo(); i++) {
-								System.out.println(i + "번 유저에게 전송 준비 중");
-								PrintWriter sendChangePeople = new PrintWriter(userInstance.getUserInfo(i).socket.getOutputStream());
-								sendChangePeople.println("NOTIFY_REMOVE_ROOM%$%" + (roomNu-1));
-								sendChangePeople.flush();
-								System.out.println(i + "번 유저까지 전송 완료");
-							}
-						}
-					}
-					userInstance.removeUser(userInfo.nickName);
+					
 					
 				}
 				System.out.println("====================================");
@@ -276,9 +257,48 @@ public class UserThread extends Thread {
 		} catch (Exception e) {
 			System.out.println("userthread : " + e.getMessage());
 		} finally { // 서버 종료시 소켓을 해제
+			System.out.println("finally 진입 / 유저 정보 확인 : " + userInfo.nickName);
 			if (socket != null) {
 				try {
+					if(userInfo.roomNu != 0) {
+						try {
+							if(roomInstance.getRoomInfo((userInfo.roomNu)-1).entry != null) { // 방에서 강종 시
+								int roomNu = userInfo.roomNu-1;
+								System.out.println("현재 유저 정보의 방 번호 : " + userInfo.roomNu);
+								userInfo.roomNu = 0;
+								System.out.println("나가기 처리 후 유저 정보의 방 번호 : " + userInfo.roomNu);
+								roomInstance.getRoomInfo(roomNu).RemoveEntry(userInfo); // 해당 방의 유저 목록에서 나간 유저 삭제
+								// 나간 유저 정보 전달
+								ArrayList<User> joinUsers = roomInstance.getRoomInfo(roomNu).entry; // 참여한 방의 유저 리스트
+								if (joinUsers.size() != 0) {
+									System.out.println("해당 방에 남아있는 유저가 있다면 그 유저들에게 퇴장 메세지 전송");
+									for (int i = 0; i < joinUsers.size(); i++) { // 채팅 전송
+										System.out.println(i + "번 유저에게 전송 준비중");
+										PrintWriter sendChat = new PrintWriter(joinUsers.get(i).socket.getOutputStream());
+										sendChat.println("OUT_USER%$%" + userInfo.nickName);
+										sendChat.flush();
+										System.out.println(i + "번 유저까지 전송 완료");
+									}
+								}
+								else {
+									roomInstance.removeRoom(roomNu);
+									for (int i = 0; i < userInstance.getSizeInfo(); i++) {
+										if(userInstance.getUserInfo(i).roomNu != 0) {
+											System.out.println(i + "번 유저에게 전송 준비 중");
+											PrintWriter sendChangePeople = new PrintWriter(userInstance.getUserInfo(i).socket.getOutputStream());
+											sendChangePeople.println("NOTIFY_REMOVE_ROOM%$%" + userInfo.roomNu);
+											sendChangePeople.flush();
+											System.out.println(i + "번 유저까지 전송 완료");
+										}
+									}
+								}
+							}
+							userInstance.removeUser(userInfo.nickName);
+						} catch(Exception e) {
+						}
+					}
 					socket.close();
+					System.out.println("소켓 해제");
 				} catch (Exception e) {
 				}
 			}

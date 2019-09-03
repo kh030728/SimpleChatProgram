@@ -39,4 +39,15 @@ public class UsersInfo {
 	public User getUserInfo(int i) {
 		return userInfo.get(i);
 	}
+	
+	public Integer getUserInt(String userNick) {
+		int listNum = 0;
+		for(int i = 0; i < userInfo.size(); i++) {
+			if(userInfo.get(i).nickName == userNick) {
+				listNum = i;
+				break;
+			}
+		}
+		return listNum;
+	}
 }
